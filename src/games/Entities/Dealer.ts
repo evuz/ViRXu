@@ -1,4 +1,4 @@
-import { Deck } from '../Entities/Deck';
+import { Deck } from './Deck';
 
 export function dealerGenerator(deck: Deck) {
   let cards = deck.slice();
@@ -17,7 +17,7 @@ export function dealerGenerator(deck: Deck) {
   }
 
   const actions = {
-    getCards: () => cards,
+    card: (n = 1) => cards.splice(-n),
     shuffle,
     restart,
   };
