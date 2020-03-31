@@ -1,6 +1,8 @@
-import { VirusCard, VirusCardColor, VirusCardType } from '../Entities/VirusCard';
+import { VirusCardType } from '../../Enums/VirusCardType';
+import { VirusCardColor } from '../../Enums/VirusCardColor';
+import { Card } from '../../Entities/Card';
 
-export const infection: VirusCard = {
+export const infection: Card = {
   id: 'infection',
   name: 'Infection',
   type: VirusCardType.Treatment,
@@ -10,7 +12,7 @@ export const infection: VirusCard = {
   },
 };
 
-export const organThief: VirusCard = {
+export const organThief: Card = {
   id: 'organThief',
   name: 'Organ thief',
   type: VirusCardType.Treatment,
@@ -20,7 +22,7 @@ export const organThief: VirusCard = {
   },
 };
 
-export const transplant: VirusCard = {
+export const transplant: Card = {
   id: 'transplant',
   name: 'Transplant',
   type: VirusCardType.Treatment,
@@ -30,7 +32,7 @@ export const transplant: VirusCard = {
   },
 };
 
-export const latexGlove: VirusCard = {
+export const latexGlove: Card = {
   id: 'latexGlove',
   name: 'Latex glove',
   type: VirusCardType.Treatment,
@@ -40,7 +42,7 @@ export const latexGlove: VirusCard = {
   },
 };
 
-export const medicalError: VirusCard = {
+export const medicalError: Card = {
   id: 'medicalError',
   name: 'Medical error',
   type: VirusCardType.Treatment,

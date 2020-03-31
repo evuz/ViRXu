@@ -1,34 +1,36 @@
-import { VirusCard, VirusCardColor, VirusCardType } from '../Entities/VirusCard';
+import { VirusCardType } from '../../Enums/VirusCardType';
+import { VirusCardColor } from '../../Enums/VirusCardColor';
+import { Card } from '../../Entities/Card';
 
-export const multiVirus: VirusCard = {
+export const multiVirus: Card = {
   id: 'multiVirus',
   name: 'Multicolor virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Multi,
 };
 
-export const redVirus: VirusCard = {
+export const redVirus: Card = {
   id: 'redVirus',
   name: 'Red Virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Red,
 };
 
-export const greenVirus: VirusCard = {
+export const greenVirus: Card = {
   id: 'greenVirus',
   name: 'Green Virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Green,
 };
 
-export const blueVirus: VirusCard = {
+export const blueVirus: Card = {
   id: 'blueVirus',
   name: 'Blue Virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Blue,
 };
 
-export const yellowVirus: VirusCard = {
+export const yellowVirus: Card = {
   id: 'yellowVirus',
   name: 'Yellow Virus',
   type: VirusCardType.Virus,
