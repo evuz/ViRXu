@@ -1,4 +1,4 @@
-import { deckGenerator } from '../Entities/Deck';
+import { deckGenerator, Deck } from '../Entities/Deck';
 import {
   multiOrgan,
   heart,
@@ -22,7 +22,7 @@ import {
   medicalError,
 } from './Cards';
 
-export const virusDeck = deckGenerator([
+export const virusDeck: Deck = deckGenerator([
   { card: multiOrgan, quantity: 1 },
   { card: heart, quantity: 5 },
   { card: liver, quantity: 5 },
