@@ -1,5 +1,7 @@
 import { Deck } from './Deck';
 
+export type Dealer = ReturnType<typeof dealerGenerator>;
+
 export function dealerGenerator(deck: Deck) {
   let cards = deck.slice();
   function restart() {
