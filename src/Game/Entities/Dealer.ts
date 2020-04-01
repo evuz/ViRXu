@@ -1,12 +1,21 @@
+import { Observable } from 'rxjs';
+
 import { Deck } from './Deck';
+import { actionableGenerator, Action } from './Action';
 
 export type Dealer = ReturnType<typeof dealerGenerator>;
 
 export function dealerGenerator(deck: Deck) {
   let cards = deck.slice();
+  const [action$, fireAction] = actionableGenerator();
+
   function restart() {
     cards = deck.slice();
     return actions;
+  }
+
+  function start(gameActions$: Observable<Action>) {
+    gameActions$.subscribe((action) => console.log(`Dealer ->`, action));
   }
 
   function shuffle() {
@@ -19,9 +28,12 @@ export function dealerGenerator(deck: Deck) {
   }
 
   const actions = {
-    card: (n = 1) => cards.splice(-n),
+    action$,
+    start,
     shuffle,
     restart,
+    fireAction,
+    card: (n = 1) => cards.splice(-n),
   };
 
   return actions;

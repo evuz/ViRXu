@@ -1,7 +1,8 @@
-import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { Card } from './Card';
 import { createSubject } from '../../Utils/createSubject';
+import { actionableGenerator, Action } from './Action';
 
 export type PlayerItem = {
   id: string;
@@ -11,20 +12,13 @@ export type PlayerItem = {
 export type Player = ReturnType<typeof playerGenerator>;
 
 export function playerGenerator({ id, name }: PlayerItem) {
-  const [boardSubject, board$] = createSubject<Card[][], BehaviorSubject<Card[][]>>(
-    () => new BehaviorSubject<Card[][]>([]),
-  );
-  const [readySubject, ready$] = createSubject<boolean>();
   let hand: Card[] = [];
+
+  const [readySubject, ready$] = createSubject<boolean>();
+  const [action$, fireAction] = actionableGenerator();
 
   function addCardsHand(cards: []) {
     hand = hand.concat(cards);
-    return actions;
-  }
-
-  function addCardsBoard(cards: []) {
-    const board = (<BehaviorSubject<Card[][]>>boardSubject).getValue();
-    boardSubject.next(board.concat(cards));
     return actions;
   }
 
@@ -33,16 +27,20 @@ export function playerGenerator({ id, name }: PlayerItem) {
     return actions;
   }
 
+  function start(gameActions$: Observable<Action>) {
+    gameActions$.subscribe((action) => console.log(`Player ${name} ->`, action));
+  }
+
   const actions = {
-    board$,
     ready$,
+    action$,
     ready,
+    start,
+    fireAction,
     addCardsHand,
-    addCardsBoard,
     getId: () => id,
     getName: () => name,
     getHand: () => hand.slice(),
-    getBoard: () => boardSubject.getValue(),
   };
 
   return actions;
