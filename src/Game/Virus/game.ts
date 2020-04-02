@@ -38,7 +38,7 @@ export function virusGenerator(numberOfPlayers = 4) {
     startListeners();
     fireAction(EntitiesId.All, {
       action: ActionsPayloadType.Start,
-      players: players.map((player) => player.getId()),
+      players: players,
     });
   });
 
@@ -59,7 +59,7 @@ export function virusGenerator(numberOfPlayers = 4) {
     allActions$.pipe(filter((action) => action.payload.action === ActionsPayloadType.Start)).subscribe(() => {
       fireAction(EntitiesId.All, {
         action: ActionsPayloadType.CurrentPlayer,
-        player: players[random(players.length - 1)].getId(),
+        player: players[random(players.length - 1)],
       });
     });
 

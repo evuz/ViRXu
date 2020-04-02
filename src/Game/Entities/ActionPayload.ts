@@ -6,12 +6,12 @@ export type ActionPayload = ActionPayloadDraw | ActionPayloadStart | ActionPaylo
 
 export type ActionPayloadStart = {
   action: ActionsPayloadType.Start;
-  players: Array<ReturnType<Player['getId']>>;
+  players: Player[];
 };
 
 export type ActionPayloadCurrentPlayer = {
   action: ActionsPayloadType.CurrentPlayer;
-  player: ReturnType<Player['getId']>;
+  player: Player;
 };
 
 export type ActionPayloadDraw = ActionPayloadDrawPlayer | ActionPayloadDrawDealer;

@@ -35,7 +35,8 @@ export function dealerGenerator(deck: Deck) {
     const payload = action.payload;
     const cardsByPlayer: { [e: string]: Card[] } = {};
     Array.from({ length: initialCardsByPlayer }).forEach(() => {
-      payload.players.forEach((playerId) => {
+      payload.players.forEach((player) => {
+        const playerId = player.getId();
         if (!cardsByPlayer[playerId]) {
           cardsByPlayer[playerId] = [];
         }
@@ -64,7 +65,6 @@ export function dealerGenerator(deck: Deck) {
     start,
     shuffle,
     restart,
-    fireAction,
     card: (n = 1) => cards.splice(-n),
   };
 
