@@ -1,8 +1,11 @@
 import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { Card } from './Card';
 import { createSubject } from '../../Utils/createSubject';
 import { actionableGenerator, Action } from './Action';
+import { EntitiesId } from '../Enums/EntitiesId';
+import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 
 export type PlayerItem = {
   id: string;
@@ -28,7 +31,13 @@ export function playerGenerator({ id, name }: PlayerItem) {
   }
 
   function start(gameActions$: Observable<Action>) {
-    gameActions$.subscribe((action) => console.log(`Player ${name} ->`, action));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const allActions$ = gameActions$.pipe(filter((action) => action.to === EntitiesId.All));
+    const myActions$ = gameActions$.pipe(filter((action) => action.to === id));
+
+    myActions$
+      .pipe(filter((action) => action.payload.action === ActionsPayloadType.Draw))
+      .subscribe((action) => console.log(`Player ${name} ->`, action));
   }
 
   const actions = {

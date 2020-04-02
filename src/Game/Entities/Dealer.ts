@@ -1,12 +1,20 @@
 import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { Deck } from './Deck';
 import { actionableGenerator, Action } from './Action';
+import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
+import { EntitiesId } from '../Enums/EntitiesId';
+import { ActionPayloadStart } from './ActionPayload';
+import { Card } from './Card';
 
 export type Dealer = ReturnType<typeof dealerGenerator>;
 
 export function dealerGenerator(deck: Deck) {
   let cards = deck.slice();
+
+  const initialCardsByPlayer = 3;
+  const id = EntitiesId.Dealer;
   const [action$, fireAction] = actionableGenerator();
 
   function restart() {
@@ -15,7 +23,35 @@ export function dealerGenerator(deck: Deck) {
   }
 
   function start(gameActions$: Observable<Action>) {
-    gameActions$.subscribe((action) => console.log(`Dealer ->`, action));
+    shuffle();
+    const allActions$ = gameActions$.pipe(filter((action) => action.to === EntitiesId.All));
+    const myActions$ = gameActions$.pipe(filter((action) => action.to === id));
+
+    allActions$.pipe(filter((action) => action.payload.action === ActionsPayloadType.Start)).subscribe(initialDraw);
+    myActions$.pipe(filter((action) => action.payload?.action === ActionsPayloadType.Draw));
+  }
+
+  function initialDraw(action: Action<ActionPayloadStart>) {
+    const payload = action.payload;
+    const cardsByPlayer: { [e: string]: Card[] } = {};
+    Array.from({ length: initialCardsByPlayer }).forEach(() => {
+      payload.players.forEach((playerId) => {
+        if (!cardsByPlayer[playerId]) {
+          cardsByPlayer[playerId] = [];
+        }
+        cardsByPlayer[playerId] = cardsByPlayer[playerId].concat(actions.card());
+      });
+    });
+    Object.keys(cardsByPlayer).forEach((key) => {
+      fireAction({
+        from: id,
+        to: key,
+        payload: {
+          action: ActionsPayloadType.Draw,
+          cards: cardsByPlayer[key],
+        },
+      });
+    });
   }
 
   function shuffle() {
