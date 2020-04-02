@@ -6,5 +6,4 @@ export type Card = {
   name: string;
   type: VirusCardType;
   color: VirusCardColor;
-  action?: Function;
 };

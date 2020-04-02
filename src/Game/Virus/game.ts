@@ -5,8 +5,9 @@ import { virusDeck } from './deck';
 import { Player } from '../Entities/Player';
 import { createSubject } from '../../Utils/createSubject';
 import { dealerGenerator, Dealer } from '../Entities/Dealer';
-import { random } from '../../Utils/random';
 import { actionableGenerator, Action } from '../Entities/Action';
+import { EntitiesId } from '../Enums/EntitiesId';
+import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
 
@@ -15,6 +16,7 @@ export function virusGenerator(numberOfPlayers = 4) {
   let players: Player[] = [];
   let gameActions$: Observable<Action>;
 
+  const id = EntitiesId.Game;
   const deck = virusDeck;
   const [playerSubject, player$] = createSubject<Player>();
   const [action$, fireAction] = actionableGenerator();
@@ -31,15 +33,24 @@ export function virusGenerator(numberOfPlayers = 4) {
     players.forEach((player) => player.start(gameActions$));
     dealer.start(gameActions$);
     startGame();
-    fireAction({ type: 'Start game!' });
-    fireAction({ type: 'Current user', payload: players[random(players.length - 1)].getId() });
+    fireAction({
+      to: EntitiesId.All,
+      from: id,
+      payload: {
+        action: ActionsPayloadType.Start,
+        players: players.map((player) => player.getId()),
+      },
+    });
   });
 
   function startGame() {
     if (!gameActions$) {
       throw Error('Users are not ready!');
     }
-    gameActions$.subscribe((action) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const allActions$ = gameActions$.pipe(filter((action) => action.to === EntitiesId.All));
+    const myActions$ = gameActions$.pipe(filter((action) => action.to === id));
+    myActions$.subscribe((action) => {
       console.log('Game ->', action);
     });
   }
