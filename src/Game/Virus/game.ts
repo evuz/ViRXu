@@ -8,6 +8,7 @@ import { dealerGenerator, Dealer } from '../Entities/Dealer';
 import { actionableGenerator, Action } from '../Entities/Action';
 import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
+import { random } from '../../Utils/random';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
 
@@ -51,9 +52,17 @@ export function virusGenerator(numberOfPlayers = 4) {
     if (!gameActions$) {
       throw Error('Users are not ready!');
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const allActions$ = gameActions$.pipe(filter((action) => action.to === EntitiesId.All));
     const myActions$ = gameActions$.pipe(filter((action) => action.to === id));
+
+    allActions$.pipe(filter((action) => action.payload.action === ActionsPayloadType.Start)).subscribe(() => {
+      fireAction(EntitiesId.All, {
+        action: ActionsPayloadType.CurrentPlayer,
+        player: players[random(players.length - 1)].getId(),
+      });
+    });
+
     myActions$.subscribe((action) => {
       console.log('Game ->', action);
     });

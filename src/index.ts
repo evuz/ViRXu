@@ -1,5 +1,6 @@
 import { virusGenerator } from './Game/Virus/game';
 import { playerGenerator } from './Game/Entities/Player';
+import { switchMap } from 'rxjs/operators';
 
 console.log('Use window.virus to see the game');
 const game = virusGenerator();
@@ -17,5 +18,9 @@ const players = [
   player3: players[2],
   player4: players[3],
 };
+
+game.start$.pipe(switchMap((actions$) => actions$)).subscribe((action) => {
+  console.log('actions$ ->', action);
+});
 
 players.forEach((player) => game.addPlayer(player));
