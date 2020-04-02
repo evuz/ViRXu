@@ -6,6 +6,7 @@
   "scripts": {
     "start": "parcel ./src/index.html",
     "build": "parcel build ./src/index.html",
+    "transpile": "tsc",
     "commit": "git-cz"
   },
   "dependencies": {

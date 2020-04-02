@@ -19,31 +19,35 @@ export function virusGenerator(numberOfPlayers = 4) {
   const id = EntitiesId.Game;
   const deck = virusDeck;
   const [playerSubject, player$] = createSubject<Player>();
-  const [action$, fireAction] = actionableGenerator();
-  const start$ = player$.pipe(
+  const [startSubject, start$] = createSubject<typeof gameActions$>();
+  const [action$, fireAction] = actionableGenerator(id);
+  const ready$ = player$.pipe(
     tap((player) => (players = players.concat([player]))),
     scan((acc) => acc + 1, 0),
     filter((players) => players >= numberOfPlayers),
   );
 
-  start$.subscribe(() => {
-    dealer = dealerGenerator(deck);
+  ready$.subscribe(() => {
     const playerActions = players.map((player) => player.action$);
+
+    dealer = dealerGenerator(deck);
     gameActions$ = merge(...playerActions.concat([dealer.action$, action$]));
-    players.forEach((player) => player.start(gameActions$));
-    dealer.start(gameActions$);
-    startGame();
-    fireAction({
-      to: EntitiesId.All,
-      from: id,
-      payload: {
-        action: ActionsPayloadType.Start,
-        players: players.map((player) => player.getId()),
-      },
+
+    deliverGameActions();
+    startListeners();
+    fireAction(EntitiesId.All, {
+      action: ActionsPayloadType.Start,
+      players: players.map((player) => player.getId()),
     });
   });
 
-  function startGame() {
+  function deliverGameActions() {
+    startSubject.next(gameActions$);
+    players.forEach((player) => player.start(gameActions$));
+    dealer.start(gameActions$);
+  }
+
+  function startListeners() {
     if (!gameActions$) {
       throw Error('Users are not ready!');
     }
@@ -61,6 +65,7 @@ export function virusGenerator(numberOfPlayers = 4) {
   }
 
   const actions = {
+    start$,
     addPlayer,
   };
 

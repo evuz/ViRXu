@@ -18,7 +18,7 @@ export function playerGenerator({ id, name }: PlayerItem) {
   let hand: Card[] = [];
 
   const [readySubject, ready$] = createSubject<boolean>();
-  const [action$, fireAction] = actionableGenerator();
+  const [action$, fireAction] = actionableGenerator(id);
 
   function addCardsHand(cards: []) {
     hand = hand.concat(cards);

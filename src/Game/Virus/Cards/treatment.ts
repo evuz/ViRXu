@@ -7,9 +7,6 @@ export const infection: Card = {
   name: 'Infection',
   type: VirusCardType.Treatment,
   color: VirusCardColor.Multi,
-  action: () => {
-    console.log('First Aid Kit');
-  },
 };
 
 export const organThief: Card = {
@@ -17,9 +14,6 @@ export const organThief: Card = {
   name: 'Organ thief',
   type: VirusCardType.Treatment,
   color: VirusCardColor.Multi,
-  action: () => {
-    console.log('Organ thief');
-  },
 };
 
 export const transplant: Card = {
@@ -27,9 +21,6 @@ export const transplant: Card = {
   name: 'Transplant',
   type: VirusCardType.Treatment,
   color: VirusCardColor.Multi,
-  action: () => {
-    console.log('Transplant');
-  },
 };
 
 export const latexGlove: Card = {
@@ -37,9 +28,6 @@ export const latexGlove: Card = {
   name: 'Latex glove',
   type: VirusCardType.Treatment,
   color: VirusCardColor.Multi,
-  action: () => {
-    console.log('Pill');
-  },
 };
 
 export const medicalError: Card = {
@@ -47,7 +35,4 @@ export const medicalError: Card = {
   name: 'Medical error',
   type: VirusCardType.Treatment,
   color: VirusCardColor.Multi,
-  action: () => {
-    console.log('Medical error');
-  },
 };

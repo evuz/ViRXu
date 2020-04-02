@@ -10,11 +10,15 @@ export type Action<T = ActionPayload> = {
 };
 export type Actionable = ReturnType<typeof actionableGenerator>;
 
-export function actionableGenerator() {
+export function actionableGenerator(from: Action['from']) {
   const [actionSubject, action$] = createSubject<Action>();
 
-  function fireAction(action: Action) {
-    actionSubject.next(action);
+  function fireAction(to: Action['to'], payload: ActionPayload) {
+    actionSubject.next({
+      to,
+      from,
+      payload,
+    });
   }
   return [action$, fireAction] as const;
 }

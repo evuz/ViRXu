@@ -15,7 +15,7 @@ export function dealerGenerator(deck: Deck) {
 
   const initialCardsByPlayer = 3;
   const id = EntitiesId.Dealer;
-  const [action$, fireAction] = actionableGenerator();
+  const [action$, fireAction] = actionableGenerator(id);
 
   function restart() {
     cards = deck.slice();
@@ -43,13 +43,9 @@ export function dealerGenerator(deck: Deck) {
       });
     });
     Object.keys(cardsByPlayer).forEach((key) => {
-      fireAction({
-        from: id,
-        to: key,
-        payload: {
-          action: ActionsPayloadType.Draw,
-          cards: cardsByPlayer[key],
-        },
+      fireAction(key, {
+        action: ActionsPayloadType.Draw,
+        cards: cardsByPlayer[key],
       });
     });
   }
