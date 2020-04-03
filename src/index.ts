@@ -23,4 +23,6 @@ game.start$.pipe(switchMap((actions$) => actions$)).subscribe((action) => {
   console.log('actions$ ->', action);
 });
 
+players[0].hand$.subscribe((c) => console.log('Cards', c));
+
 players.forEach((player) => game.addPlayer(player));

@@ -16,12 +16,12 @@ export type ActionPayloadCurrentPlayer = {
 
 export type ActionPayloadDraw = ActionPayloadDrawPlayer | ActionPayloadDrawDealer;
 
-type ActionPayloadDrawPlayer = {
+export type ActionPayloadDrawPlayer = {
   action: ActionsPayloadType.Draw;
   quantity: number;
 };
 
-type ActionPayloadDrawDealer = {
+export type ActionPayloadDrawDealer = {
   action: ActionsPayloadType.Draw;
   cards: Card[];
 };
