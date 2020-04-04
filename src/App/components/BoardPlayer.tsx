@@ -12,7 +12,7 @@ export const BoardPlayer: FC<BoardPlayer> = ({ player }) => {
   useEffect(() => {
     const subscription = player.ready$.subscribe(() => setIsReady(true));
     () => subscription.unsubscribe();
-  });
+  }, [player.ready$]);
 
   return (
     <div className="BoardPlayer">

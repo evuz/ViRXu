@@ -5,13 +5,15 @@ import { filterClassNames } from '../../Utils/filterClassNames';
 
 type CardProps = {
   card: ICard;
+  selected?: boolean;
 };
 
-export const Card: FC<CardProps> = ({ card: c }) => {
+export const Card: FC<CardProps> = ({ card: c, selected = false }) => {
   const classNameColor = `Card--${c.color}`;
   const classNames = filterClassNames({
     Card: true,
     [classNameColor]: true,
+    'Card--selected': selected,
   });
   return (
     <figure className={classNames}>

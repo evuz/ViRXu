@@ -31,7 +31,7 @@ export const Virus = () => {
         setCurrentPlayer(payload.player);
       });
     () => subscription.unsubscribe();
-  });
+  }, [game.start$]);
 
   return (
     <div className="Virus">
