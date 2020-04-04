@@ -1,0 +1,23 @@
+@function to-rem($font-size) {
+  $html-font-size: 16px;
+  $rem-size: $font-size / $html-font-size;
+  @return #{$rem-size}rem;
+}
+
+@function get-color($color, $state: normal) {
+  $value: map-get($colors, $color);
+
+  @if $state == normal {
+    @return $value;
+  }
+
+  @if $state == light {
+    @return lighten($value, 10%);
+  }
+
+  @if $state == dark {
+    @return darken($value, 10%);
+  }
+
+  @error "#{$state} is not a correct state.";
+}

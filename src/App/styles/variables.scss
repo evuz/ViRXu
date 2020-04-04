@@ -1,0 +1,37 @@
+// Spacing
+$spacing-m: 0.75rem;
+$spacing-s: 0.5rem;
+$spacing-xs: 0.25rem;
+$spacing: $spacing-m;
+
+// Transition speed
+$slow: 2s;
+$fast: 1s;
+$faster: 0.5s;
+$fastest: 0.3s;
+
+// Border radius
+$border-radius: 0.25rem;
+
+// Sizes
+$font-size-xxl: 3rem;
+$font-size-xl: 2rem;
+$font-size-l: 1.5rem;
+$font-size-m: 1.25rem;
+$font-size-s: 1rem;
+$font-size-xs: 0.75rem;
+$font-size-xxs: 0.5rem;
+$font-size: $font-size-s;
+
+// Shadows
+$shadow-l: 0 to-rem(10px) to-rem(15px) -#{to-rem(3px)} rgba(0, 0, 0, 0.1),
+  0 to-rem(4px) to-rem(6px) -#{to-rem(2px)} rgba(0, 0, 0, 0.05);
+$shadow-m: 0 to-rem(4px) to-rem(6px) -#{to-rem(1px)} rgba(0, 0, 0, 0.1),
+  0 to-rem(2px) to-rem(4px) -#{to-rem(1px)} rgba(0, 0, 0, 0.06);
+$shadow-s: 0 to-rem(1px) to-rem(3px) 0 rgba(0, 0, 0, 0.1), 0 to-rem(1px) to-rem(2px) 0 rgba(0, 0, 0, 0.06);
+$shadow: $shadow-m;
+
+// Breakpoints
+$breakpoint-s: 576px;
+$breakpoint-m: 768px;
+$breakpoint-l: 1024px;

@@ -1,5 +1,13 @@
 import React from 'react';
 
+import { Virus } from './containers/Virus';
+
+import './styles/index.scss';
+
 export const App = () => {
-  return <h2>Welcome to ViRXu!</h2>;
+  return (
+    <div className="App">
+      <Virus />
+    </div>
+  );
 };
