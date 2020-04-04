@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { Card } from './Card';
@@ -18,11 +18,12 @@ export type Player = ReturnType<typeof playerGenerator>;
 export function playerGenerator({ id, name }: PlayerItem) {
   let hand: Card[] = [];
 
-  const [handSubject, hand$] = createSubject<Card[]>();
+  const [handSubject, hand$] = createSubject<Card[]>(() => new ReplaySubject<Card[]>(1));
   const [readySubject, ready$] = createSubject<boolean>();
   const [action$, fireAction] = actionableGenerator(id);
 
   function addCardsHand(cards: Card[]) {
+    // TODO: make hand$ with scan operator
     hand = hand.concat(cards);
     handSubject.next(hand);
     return actions;
