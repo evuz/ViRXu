@@ -1,0 +1,83 @@
+.Card {
+  height: 120px;
+  width: 90px;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+  background: get-color(dark);
+  box-shadow: $shadow;
+
+  &--red {
+    background: linear-gradient(
+      45deg,
+      rgba(get-color(red), 1) 0%,
+      rgba(255, 255, 255, 1) 50%,
+      rgba(get-color(red), 1) 100%
+    );
+
+    .Card__content {
+      background: rgba(get-color(red), 0.3);
+    }
+  }
+
+  &--blue {
+    background: linear-gradient(
+      45deg,
+      rgba(get-color(blue), 1) 0%,
+      rgba(255, 255, 255, 1) 50%,
+      rgba(get-color(blue), 1) 100%
+    );
+
+    .Card__content {
+      background: rgba(get-color(blue), 0.3);
+    }
+  }
+
+  &--green {
+    background: linear-gradient(
+      45deg,
+      rgba(get-color(green), 1) 0%,
+      rgba(255, 255, 255, 1) 50%,
+      rgba(get-color(green), 1) 100%
+    );
+
+    .Card__content {
+      background: rgba(get-color(green), 0.3);
+    }
+  }
+
+  &--yellow {
+    background: linear-gradient(
+      45deg,
+      rgba(get-color(yellow), 1) 0%,
+      rgba(255, 255, 255, 1) 50%,
+      rgba(get-color(yellow), 1) 100%
+    );
+
+    .Card__content {
+      background: rgba(get-color(yellow), 0.3);
+    }
+  }
+
+  &--multi {
+    background: linear-gradient(
+      45deg,
+      rgba(get-color(blue), 0.7) 0%,
+      rgba(get-color(green), 0.7) 33%,
+      rgba(get-color(yellow), 0.7) 66%,
+      rgba(get-color(red), 0.7) 100%
+    );
+  }
+
+  &__content {
+    height: 100%;
+    width: 100%;
+    border: 2px solid white;
+    border-radius: $border-radius;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+}

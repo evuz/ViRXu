@@ -8,6 +8,7 @@
     "no-useless-constructor": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
+    "react/prop-types": "off",
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/array-type": ["error", { "default": "array-simple" }]
   },

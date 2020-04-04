@@ -1,7 +1,7 @@
 export const enum VirusCardColor {
-  Multi,
-  Red,
-  Green,
-  Blue,
-  Yellow,
+  Multi = 'multi',
+  Red = 'red',
+  Green = 'green',
+  Blue = 'blue',
+  Yellow = 'yellow',
 }
