@@ -1,0 +1,82 @@
+.Button {
+  padding: 0 $spacing * 2;
+  border-radius: to-rem(3px);
+  height: to-rem(40px);
+
+  &--full {
+    width: 100%;
+  }
+
+  &--icon {
+    width: to-rem(40px);
+    padding: 0;
+
+    .Button__icon {
+      margin-right: 0;
+    }
+  }
+
+  &--primary {
+    background-color: get-color(primary);
+    color: get-color(white);
+    &:hover {
+      background-color: get-color(primary, light);
+    }
+    &:active {
+      background-color: get-color(primary, dark);
+    }
+  }
+
+  &--accent {
+    background-color: get-color(accent);
+    color: get-color(white);
+    &:hover {
+      background-color: get-color(accent, light);
+    }
+    &:active {
+      background-color: get-color(accent, dark);
+    }
+  }
+
+  &--confirm {
+    background-color: get-color(green);
+    color: get-color(white);
+    &:hover {
+      background-color: get-color(green, light);
+    }
+    &:active {
+      background-color: get-color(green, dark);
+    }
+  }
+
+  &--danger {
+    background-color: get-color(red);
+    color: get-color(white);
+    &:hover {
+      background-color: get-color(red, light);
+    }
+    &:active {
+      background-color: get-color(red, dark);
+    }
+  }
+
+  &--warning {
+    background-color: get-color(yellow);
+    color: get-color(white);
+    &:hover {
+      background-color: get-color(yellow, light);
+    }
+    &:active {
+      background-color: get-color(yellow, dark);
+    }
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  &__icon {
+    margin-right: $spacing-s;
+  }
+}

@@ -1,6 +1,7 @@
 import React, { FC, useState, useEffect } from 'react';
 
 import { Player } from '../../Game/Entities/Player';
+import { Button } from './Button';
 
 type BoardPlayer = {
   player: Player;
@@ -17,7 +18,7 @@ export const BoardPlayer: FC<BoardPlayer> = ({ player }) => {
   return (
     <div className="BoardPlayer">
       {player.getName()}
-      {!isReady ? <button onClick={() => player.ready(true)}>Ready!</button> : null}
+      {!isReady ? <Button onClick={() => player.ready(true)}>Ready!</Button> : null}
     </div>
   );
 };
