@@ -12,6 +12,7 @@ export type Dealer = ReturnType<typeof dealerGenerator>;
 
 export function dealerGenerator(deck: Deck) {
   let cards = deck.slice();
+  let stack = [];
 
   const initialCardsByPlayer = 3;
   const id = EntitiesId.Dealer;
@@ -40,7 +41,7 @@ export function dealerGenerator(deck: Deck) {
         if (!cardsByPlayer[playerId]) {
           cardsByPlayer[playerId] = [];
         }
-        cardsByPlayer[playerId] = cardsByPlayer[playerId].concat(actions.card());
+        cardsByPlayer[playerId] = cardsByPlayer[playerId].concat(drawCard());
       });
     });
     Object.keys(cardsByPlayer).forEach((key) => {
@@ -51,7 +52,11 @@ export function dealerGenerator(deck: Deck) {
     });
   }
 
-  function shuffle() {
+  function shuffle(useStack = true) {
+    if (useStack) {
+      cards = cards.concat(stack);
+      stack = [];
+    }
     // Durstenfeld shuffle
     for (let i = cards.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -60,12 +65,21 @@ export function dealerGenerator(deck: Deck) {
     return actions;
   }
 
+  function drawCard(n = 1) {
+    if (n < 1) {
+      throw Error('You have to draw at least one card');
+    }
+    if (cards.length < n) {
+      shuffle();
+    }
+    return cards.splice(-n);
+  }
+
   const actions = {
     action$,
     start,
     shuffle,
     restart,
-    card: (n = 1) => cards.splice(-n),
   };
 
   return actions;
