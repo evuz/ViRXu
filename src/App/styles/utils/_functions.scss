@@ -4,7 +4,7 @@
   @return #{$rem-size}rem;
 }
 
-@function get-color($color, $state: normal) {
+@function get-color($color, $state: normal, $percent: 10%) {
   $value: map-get($colors, $color);
 
   @if $state == normal {
@@ -12,11 +12,11 @@
   }
 
   @if $state == light {
-    @return lighten($value, 10%);
+    @return lighten($value, $percent);
   }
 
   @if $state == dark {
-    @return darken($value, 10%);
+    @return darken($value, $percent);
   }
 
   @error "#{$state} is not a correct state.";

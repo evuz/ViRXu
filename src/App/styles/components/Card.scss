@@ -17,7 +17,7 @@
     background: linear-gradient(
       45deg,
       rgba(get-color(red), 1) 0%,
-      rgba(255, 255, 255, 1) 50%,
+      rgba(get-color(red, light, 50%), 1) 50%,
       rgba(get-color(red), 1) 100%
     );
 
@@ -30,7 +30,7 @@
     background: linear-gradient(
       45deg,
       rgba(get-color(blue), 1) 0%,
-      rgba(255, 255, 255, 1) 50%,
+      rgba(get-color(blue, light, 50%), 1) 50%,
       rgba(get-color(blue), 1) 100%
     );
 
@@ -43,7 +43,7 @@
     background: linear-gradient(
       45deg,
       rgba(get-color(green), 1) 0%,
-      rgba(255, 255, 255, 1) 50%,
+      rgba(get-color(green, light, 50%), 1) 50%,
       rgba(get-color(green), 1) 100%
     );
 
@@ -56,7 +56,7 @@
     background: linear-gradient(
       45deg,
       rgba(get-color(yellow), 1) 0%,
-      rgba(255, 255, 255, 1) 50%,
+      rgba(get-color(yellow, light, 50%), 1) 50%,
       rgba(get-color(yellow), 1) 100%
     );
 
