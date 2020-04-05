@@ -6,7 +6,7 @@ import { createSubject } from '../../Utils/createSubject';
 import { actionableGenerator, Action } from './Action';
 import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
-import { ActionPayloadDrawDealer } from './ActionPayload';
+import { ActionPayloadDraw } from './ActionPayload';
 
 export type PlayerItem = {
   id: string;
@@ -22,9 +22,16 @@ export function playerGenerator({ id, name }: PlayerItem) {
   const [readySubject, ready$] = createSubject<boolean>();
   const [action$, fireAction] = actionableGenerator(id);
 
+  // TODO: make hand$ with scan operator
   function addCardsHand(cards: Card[]) {
-    // TODO: make hand$ with scan operator
     hand = hand.concat(cards);
+    handSubject.next(hand);
+    return actions;
+  }
+
+  // TODO: make hand$ with scan operator
+  function removeCardsHand(cards: Card[]) {
+    hand = hand.filter((card) => cards.indexOf(card) === -1);
     handSubject.next(hand);
     return actions;
   }
@@ -40,13 +47,18 @@ export function playerGenerator({ id, name }: PlayerItem) {
     const myActions$ = gameActions$.pipe(filter((action) => action.to === id));
 
     myActions$.pipe(filter((action) => action.payload.action === ActionsPayloadType.Draw)).subscribe((action) => {
-      console.log(`Player ${name} ->`, action);
-      const payload = <ActionPayloadDrawDealer>action.payload;
+      const payload = <ActionPayloadDraw>action.payload;
       if (!payload.cards) {
         return;
       }
       addCardsHand(payload.cards);
     });
+  }
+
+  function discard(cards: Card[]) {
+    removeCardsHand(cards);
+    fireAction(EntitiesId.Game, { action: ActionsPayloadType.Discard, cards });
+    return actions;
   }
 
   const actions = {
@@ -55,7 +67,7 @@ export function playerGenerator({ id, name }: PlayerItem) {
     action$,
     ready,
     start,
-    fireAction,
+    discard,
     getId: () => id,
     getName: () => name,
   };

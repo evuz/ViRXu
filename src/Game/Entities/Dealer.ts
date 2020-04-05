@@ -5,7 +5,7 @@ import { Deck } from './Deck';
 import { actionableGenerator, Action } from './Action';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { EntitiesId } from '../Enums/EntitiesId';
-import { ActionPayloadStart } from './ActionPayload';
+import { ActionPayloadStart, ActionPayloadDiscard } from './ActionPayload';
 import { Card } from './Card';
 
 export type Dealer = ReturnType<typeof dealerGenerator>;
@@ -23,11 +23,21 @@ export function dealerGenerator(deck: Deck) {
     return actions;
   }
 
-  function start(gameActions$: Observable<Action>) {
-    shuffle();
-    const allActions$ = gameActions$.pipe(filter((action) => action.to === EntitiesId.All));
-    const myActions$ = gameActions$.pipe(filter((action) => action.to === id));
+  function start(actions$: Observable<Action>) {
+    const gameActions$ = actions$.pipe(filter((action) => action.to === EntitiesId.Game));
+    const allActions$ = actions$.pipe(filter((action) => action.to === EntitiesId.All));
+    const myActions$ = actions$.pipe(filter((action) => action.to === id));
 
+    shuffle();
+
+    gameActions$.pipe(filter(({ payload }) => payload.action === ActionsPayloadType.Discard)).subscribe((action) => {
+      const payload = <ActionPayloadDiscard>action.payload;
+      stack = stack.concat(payload.cards);
+      fireAction(action.from, {
+        action: ActionsPayloadType.Draw,
+        cards: drawCard(payload.cards.length),
+      });
+    });
     allActions$.pipe(filter((action) => action.payload.action === ActionsPayloadType.Start)).subscribe(initialDraw);
     myActions$.pipe(filter((action) => action.payload?.action === ActionsPayloadType.Draw));
   }

@@ -9,12 +9,14 @@ import { actionableGenerator, Action } from '../Entities/Action';
 import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { random } from '../../Utils/random';
+import { ActionPayloadCurrentPlayer } from '../Entities/ActionPayload';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
 
 export function virusGenerator(numberOfPlayers = 4) {
   let dealer: Dealer;
   let players: Player[] = [];
+  let currentPlayer: Player = null;
   let gameActions$: Observable<Action>;
 
   const id = EntitiesId.Game;
@@ -56,6 +58,13 @@ export function virusGenerator(numberOfPlayers = 4) {
     const allActions$ = gameActions$.pipe(filter((action) => action.to === EntitiesId.All));
     const myActions$ = gameActions$.pipe(filter((action) => action.to === id));
 
+    allActions$
+      .pipe(filter((action) => action.payload.action === ActionsPayloadType.CurrentPlayer))
+      .subscribe((action) => {
+        const payload = <ActionPayloadCurrentPlayer>action.payload;
+        currentPlayer = payload.player;
+      });
+
     allActions$.pipe(filter((action) => action.payload.action === ActionsPayloadType.Start)).subscribe(() => {
       fireAction(EntitiesId.All, {
         action: ActionsPayloadType.CurrentPlayer,
@@ -63,14 +72,23 @@ export function virusGenerator(numberOfPlayers = 4) {
       });
     });
 
-    myActions$.subscribe((action) => {
-      console.log('Game ->', action);
+    myActions$.pipe(filter(({ payload }) => payload.action === ActionsPayloadType.Discard)).subscribe(() => {
+      fireAction(EntitiesId.All, {
+        action: ActionsPayloadType.CurrentPlayer,
+        player: nextPlayer(),
+      });
     });
   }
 
   function addPlayer(player: Player) {
     playerSubject.next(player);
     return actions;
+  }
+
+  function nextPlayer() {
+    const currentIndex = players.indexOf(currentPlayer);
+    const newIndex = players[currentIndex + 1] ? currentIndex + 1 : 0;
+    return players[newIndex];
   }
 
   const actions = {

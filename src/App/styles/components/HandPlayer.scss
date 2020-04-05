@@ -7,4 +7,10 @@
     display: flex;
     justify-content: center;
   }
+
+  &__buttons {
+    & > button {
+      margin: $spacing-xs 0;
+    }
+  }
 }

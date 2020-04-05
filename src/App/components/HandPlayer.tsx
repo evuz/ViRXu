@@ -4,6 +4,7 @@ import { Player } from '../../Game/Entities/Player';
 import { Card as ICard } from '../../Game/Entities/Card';
 
 import { Card } from './Card';
+import { Button } from './Button';
 
 type HandPlayerProps = {
   player: Player;
@@ -12,6 +13,9 @@ type HandPlayerProps = {
 export const HandPlayer: FC<HandPlayerProps> = ({ player }) => {
   const [cards, setCards] = useState<ICard[]>([]);
   const [cardsSelected, setCardsSelected] = useState<Map<ICard, boolean>>(new Map());
+  const numberCardsSelected = Array.from(cardsSelected.values()).filter((v) => !!v).length;
+  const disableDiscard = !numberCardsSelected;
+  const disablePlay = numberCardsSelected != 1;
 
   useEffect(() => {
     const subscription = player.hand$.subscribe((c) => setCards(c));
@@ -26,6 +30,14 @@ export const HandPlayer: FC<HandPlayerProps> = ({ player }) => {
     });
   }
 
+  function discard() {
+    if (disableDiscard) {
+      return;
+    }
+    player.discard(Array.from(cardsSelected.keys()));
+    setCardsSelected(new Map());
+  }
+
   return (
     <div className="HandPlayer">
       <div className="HandPlayer__name">{player.getName()}</div>
@@ -36,7 +48,14 @@ export const HandPlayer: FC<HandPlayerProps> = ({ player }) => {
           </button>
         ))}
       </div>
-      <div className="HandPlayer__buttons"></div>
+      <div className="HandPlayer__buttons">
+        <Button full disabled={disablePlay}>
+          Play
+        </Button>
+        <Button onClick={discard} full disabled={disableDiscard}>
+          Discard
+        </Button>
+      </div>
     </div>
   );
 };
