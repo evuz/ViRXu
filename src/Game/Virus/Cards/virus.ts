@@ -1,12 +1,25 @@
 import { VirusCardType } from '../../Enums/VirusCardType';
 import { VirusCardColor } from '../../Enums/VirusCardColor';
 import { Card } from '../../Entities/Card';
+import { requirement, RequirementApply, RequirementType } from '../../Entities/Requirements';
+
+function virusRequirement(color: VirusCardColor) {
+  return [
+    requirement(RequirementApply.Selection)
+      .to(RequirementType.CardBoard)
+      .cards(1)
+      .type(VirusCardType.Organ)
+      .color(color)
+      .execute(),
+  ];
+}
 
 export const multiVirus: Card = {
   id: 'multiVirus',
   name: 'Multicolor virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Multi,
+  requirements: virusRequirement(null),
 };
 
 export const redVirus: Card = {
@@ -14,6 +27,7 @@ export const redVirus: Card = {
   name: 'Red Virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Red,
+  requirements: virusRequirement(VirusCardColor.Red),
 };
 
 export const greenVirus: Card = {
@@ -21,6 +35,7 @@ export const greenVirus: Card = {
   name: 'Green Virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Green,
+  requirements: virusRequirement(VirusCardColor.Green),
 };
 
 export const blueVirus: Card = {
@@ -28,6 +43,7 @@ export const blueVirus: Card = {
   name: 'Blue Virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Blue,
+  requirements: virusRequirement(VirusCardColor.Blue),
 };
 
 export const yellowVirus: Card = {
@@ -35,4 +51,5 @@ export const yellowVirus: Card = {
   name: 'Yellow Virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Yellow,
+  requirements: virusRequirement(VirusCardColor.Yellow),
 };
