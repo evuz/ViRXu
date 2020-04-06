@@ -1,3 +1,7 @@
 .BoardPlayer {
   flex: 1;
+
+  &--active {
+    background-color: get-color(accent);
+  }
 }
