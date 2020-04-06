@@ -6,6 +6,16 @@ import { Card as ICard } from '../../Game/Entities/Card';
 import { Card } from './Card';
 import { Button } from './Button';
 
+function getSelections(mapCards: Map<ICard, boolean>): ICard[] {
+  const selections = [];
+  mapCards.forEach((isSelected, card) => {
+    if (isSelected) {
+      selections.push(card);
+    }
+  });
+  return selections;
+}
+
 type HandPlayerProps = {
   player: Player;
 };
@@ -34,7 +44,7 @@ export const HandPlayer: FC<HandPlayerProps> = ({ player }) => {
     if (disableDiscard) {
       return;
     }
-    player.discard(Array.from(cardsSelected.keys()));
+    player.discard(getSelections(cardsSelected));
     setCardsSelected(new Map());
   }
 
