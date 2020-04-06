@@ -61,12 +61,19 @@ export function playerGenerator({ id, name }: PlayerItem) {
     return actions;
   }
 
+  function play(cards: Card[]) {
+    // TODO: remove cards when game say ok
+    fireAction(EntitiesId.Game, { action: ActionsPayloadType.Play, cards });
+    return actions;
+  }
+
   const actions = {
     hand$,
     ready$,
     action$,
     ready,
     start,
+    play,
     discard,
     getId: () => id,
     getName: () => name,

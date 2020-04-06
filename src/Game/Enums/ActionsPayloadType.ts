@@ -3,4 +3,5 @@ export const enum ActionsPayloadType {
   Start,
   CurrentPlayer,
   Discard,
+  Play,
 }
