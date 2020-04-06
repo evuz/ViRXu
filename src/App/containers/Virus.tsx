@@ -1,17 +1,17 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { switchMap, filter } from 'rxjs/operators';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
 
 import { virusGenerator } from '../../Game/Virus/game';
 import { Player } from '../../Game/Entities/Player';
-import { ActionsPayloadType } from '../../Game/Enums/ActionsPayloadType';
-import { ActionPayloadCurrentPlayer } from '../../Game/Entities/ActionPayload';
-
 import { Board } from './Board';
 import { HandPlayer } from '../components/HandPlayer';
+import { GameContext } from '../context/Game/GameContext';
+import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
 
 export const Virus = () => {
+  const { setContextGame } = useContext(GameContext);
+  const currentPlayer = useContext(CurrentPlayerContext);
+
   const [game] = useState(virusGenerator());
-  const [currentPlayer, setCurrentPlayer] = useState(null);
 
   const playerReady = useCallback(
     (player: Player) => {
@@ -21,17 +21,8 @@ export const Virus = () => {
   );
 
   useEffect(() => {
-    const subscription = game.start$
-      .pipe(
-        switchMap((actions$) => actions$),
-        filter(({ payload }) => payload.action === ActionsPayloadType.CurrentPlayer),
-      )
-      .subscribe((action) => {
-        const payload = action.payload as ActionPayloadCurrentPlayer;
-        setCurrentPlayer(payload.player);
-      });
-    () => subscription.unsubscribe();
-  }, [game.start$]);
+    setContextGame(game);
+  }, [game, setContextGame]);
 
   return (
     <div className="Virus">
