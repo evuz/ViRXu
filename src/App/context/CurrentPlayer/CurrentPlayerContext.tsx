@@ -13,10 +13,7 @@ export function CurrentPlayerState({ children }) {
   const [currentPlayer, setCurrentPlayer] = useState<Player>(null);
 
   useEffect(() => {
-    if (!game) {
-      return;
-    }
-    const subscription = game.start$
+    const subscription = game?.start$
       .pipe(
         switchMap((actions$) => actions$),
         filter(({ payload }) => payload.action === ActionsPayloadType.CurrentPlayer),
@@ -25,7 +22,7 @@ export function CurrentPlayerState({ children }) {
         const payload = action.payload as ActionPayloadCurrentPlayer;
         setCurrentPlayer(payload.player);
       });
-    () => subscription && subscription.unsubscribe();
+    () => subscription?.unsubscribe();
   }, [game]);
 
   return <CurrentPlayerContext.Provider value={currentPlayer}>{children}</CurrentPlayerContext.Provider>;
