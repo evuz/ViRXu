@@ -1,12 +1,12 @@
-import { Observable, ReplaySubject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Observable, ReplaySubject, zip, of } from 'rxjs';
+import { filter, switchMap, take, pluck } from 'rxjs/operators';
 
 import { Card } from './Card';
 import { createSubject } from '../../Utils/createSubject';
 import { actionableGenerator, Action } from './Action';
 import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
-import { ActionPayloadDraw } from './ActionPayload';
+import { ActionPayloadDraw, ActionPayloadPlay } from './ActionPayload';
 
 export type PlayerItem = {
   id: string;
@@ -45,6 +45,13 @@ export function playerGenerator({ id, name }: PlayerItem) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const allActions$ = gameActions$.pipe(filter((action) => action.to === EntitiesId.All));
     const myActions$ = gameActions$.pipe(filter((action) => action.to === id));
+    const playConfirm$ = gameActions$.pipe(
+      filter((action) => action.to === EntitiesId.Game && action.from === id),
+      filter(({ payload }) => payload.action === ActionsPayloadType.Play),
+      switchMap((action) => zip(gameActions$, of(action)).pipe(take(1))),
+      filter(([{ payload }]) => payload.action === ActionsPayloadType.CurrentPlayer),
+      pluck('1'),
+    );
 
     myActions$.pipe(filter((action) => action.payload.action === ActionsPayloadType.Draw)).subscribe((action) => {
       const payload = <ActionPayloadDraw>action.payload;
@@ -52,6 +59,12 @@ export function playerGenerator({ id, name }: PlayerItem) {
         return;
       }
       addCardsHand(payload.cards);
+    });
+
+    playConfirm$.subscribe((action) => {
+      const payload = <ActionPayloadPlay>action.payload;
+      removeCardsHand(payload.cards);
+      fireAction(EntitiesId.Dealer, { action: ActionsPayloadType.Draw, cards: payload.cards });
     });
   }
 

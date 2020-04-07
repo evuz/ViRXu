@@ -5,7 +5,7 @@ import { Deck } from './Deck';
 import { actionableGenerator, Action } from './Action';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { EntitiesId } from '../Enums/EntitiesId';
-import { ActionPayloadStart, ActionPayloadDiscard } from './ActionPayload';
+import { ActionPayloadStart, ActionPayloadDiscard, ActionPayloadPlay } from './ActionPayload';
 import { Card } from './Card';
 
 export type Dealer = ReturnType<typeof dealerGenerator>;
@@ -31,15 +31,19 @@ export function dealerGenerator(deck: Deck) {
     shuffle();
 
     gameActions$.pipe(filter(({ payload }) => payload.action === ActionsPayloadType.Discard)).subscribe((action) => {
-      const payload = <ActionPayloadDiscard>action.payload;
-      stack = stack.concat(payload.cards);
-      fireAction(action.from, {
-        action: ActionsPayloadType.Draw,
-        cards: drawCard(payload.cards.length),
-      });
+      stack = stack.concat((<ActionPayloadDiscard>action.payload).cards);
+      actionDrawCards(action);
     });
     allActions$.pipe(filter((action) => action.payload.action === ActionsPayloadType.Start)).subscribe(initialDraw);
-    myActions$.pipe(filter((action) => action.payload?.action === ActionsPayloadType.Draw));
+    myActions$.pipe(filter((action) => action.payload?.action === ActionsPayloadType.Draw)).subscribe(actionDrawCards);
+  }
+
+  function actionDrawCards(action: Action) {
+    const payload = <ActionPayloadDiscard | ActionPayloadPlay>action.payload;
+    fireAction(action.from, {
+      action: ActionsPayloadType.Draw,
+      cards: drawCards(payload.cards.length),
+    });
   }
 
   function initialDraw(action: Action<ActionPayloadStart>) {
@@ -51,7 +55,7 @@ export function dealerGenerator(deck: Deck) {
         if (!cardsByPlayer[playerId]) {
           cardsByPlayer[playerId] = [];
         }
-        cardsByPlayer[playerId] = cardsByPlayer[playerId].concat(drawCard());
+        cardsByPlayer[playerId] = cardsByPlayer[playerId].concat(drawCards());
       });
     });
     Object.keys(cardsByPlayer).forEach((key) => {
@@ -75,7 +79,7 @@ export function dealerGenerator(deck: Deck) {
     return actions;
   }
 
-  function drawCard(n = 1) {
+  function drawCards(n = 1) {
     if (n < 1) {
       throw Error('You have to draw at least one card');
     }
