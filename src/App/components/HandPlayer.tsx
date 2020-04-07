@@ -48,6 +48,14 @@ export const HandPlayer: FC<HandPlayerProps> = ({ player }) => {
     setCardsSelected(new Map());
   }
 
+  function play() {
+    if (disablePlay) {
+      return;
+    }
+    player.play(getSelections(cardsSelected));
+    setCardsSelected(new Map());
+  }
+
   return (
     <div className="HandPlayer">
       <div className="HandPlayer__name">{player.getName()}</div>
@@ -59,7 +67,7 @@ export const HandPlayer: FC<HandPlayerProps> = ({ player }) => {
         ))}
       </div>
       <div className="HandPlayer__buttons">
-        <Button full disabled={disablePlay}>
+        <Button onClick={play} full disabled={disablePlay}>
           Play
         </Button>
         <Button onClick={discard} full disabled={disableDiscard}>

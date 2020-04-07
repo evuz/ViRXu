@@ -1,15 +1,18 @@
 import React, { FC, useState, useEffect } from 'react';
 
-import { Player } from '../../Game/Entities/Player';
 import { Button } from './Button';
+import { CardPlayed } from './CardPlayed';
+import { Player } from '../../Game/Entities/Player';
 import { filterClassNames } from '../../Utils/filterClassNames';
+import { CardPlayed as ICardPlayed } from '../../Game/Entities/CardPlayed';
 
 type BoardPlayer = {
   player: Player;
+  board: ICardPlayed[];
   active?: boolean;
 };
 
-export const BoardPlayer: FC<BoardPlayer> = ({ player, active = false }) => {
+export const BoardPlayer: FC<BoardPlayer> = ({ player, board, active = false }) => {
   const [isReady, setIsReady] = useState(false);
   const classNames = filterClassNames({
     BoardPlayer: true,
@@ -25,6 +28,9 @@ export const BoardPlayer: FC<BoardPlayer> = ({ player, active = false }) => {
     <div className={classNames}>
       {player.getName()}
       {!isReady ? <Button onClick={() => player.ready(true)}>Ready!</Button> : null}
+      <div className="BoardPlayer__cards">
+        {board ? board.map((cards, index) => <CardPlayed key={index} card={cards} />) : null}
+      </div>
     </div>
   );
 };
