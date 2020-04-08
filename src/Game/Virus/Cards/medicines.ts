@@ -8,8 +8,8 @@ function medicineRequirement(color: VirusCardColor) {
     requirement(RequirementApply.Selection)
       .to(RequirementType.CardUser)
       .cards(1)
-      .type(VirusCardType.Organ)
-      .color(color)
+      .type([VirusCardType.Organ])
+      .color([color])
       .execute(),
   ];
 }

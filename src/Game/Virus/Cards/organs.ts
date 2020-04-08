@@ -1,16 +1,15 @@
-import { VirusCardType } from '../../Enums/VirusCardType';
-import { VirusCardColor } from '../../Enums/VirusCardColor';
 import { Card } from '../../Entities/Card';
 import { requirement, RequirementApply, RequirementType } from '../../Entities/Requirements';
+import { VirusCardColor } from '../../Enums/VirusCardColor';
+import { VirusCardType } from '../../Enums/VirusCardType';
 
 function organsRequirement(color: VirusCardColor) {
   return [
-    requirement(RequirementApply.Permission)
+    requirement(RequirementApply.Rules)
+      .cards(0)
       .to(RequirementType.CardUser)
-      .cards(1)
-      .different(true)
-      .type(VirusCardType.Organ)
-      .color(color)
+      .type([VirusCardType.Organ])
+      .color([color])
       .execute(),
   ];
 }
@@ -20,7 +19,6 @@ export const multiOrgan: Card = {
   name: 'Multicolor organ',
   type: VirusCardType.Organ,
   color: VirusCardColor.Multi,
-  requirements: organsRequirement(null),
 };
 
 export const heart: Card = {

@@ -4,4 +4,5 @@ export const enum ActionsPayloadType {
   CurrentPlayer,
   Discard,
   Play,
+  Error,
 }

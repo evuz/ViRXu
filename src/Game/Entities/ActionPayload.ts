@@ -7,7 +7,8 @@ export type ActionPayload =
   | ActionPayloadStart
   | ActionPayloadCurrentPlayer
   | ActionPayloadDiscard
-  | ActionPayloadPlay;
+  | ActionPayloadPlay
+  | ActionPayloadError;
 
 export type ActionPayloadStart = {
   action: ActionsPayloadType.Start;
@@ -27,6 +28,11 @@ export type ActionPayloadDraw = {
 export type ActionPayloadDiscard = {
   action: ActionsPayloadType.Discard;
   cards: Card[];
+};
+
+export type ActionPayloadError = {
+  action: ActionsPayloadType.Error;
+  message: string;
 };
 
 export type ActionPayloadPlay = {
