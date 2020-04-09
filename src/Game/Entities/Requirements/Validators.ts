@@ -5,7 +5,10 @@ import { CardPlayed } from '../CardPlayed';
 import { Player } from '../Player';
 import { Requirement, RequirementApply, RequirementType } from '../Requirements';
 
-export function requirementsValidator(action: Action<ActionPayloadPlay>, board: Map<Player, CardPlayed[]>) {
+export function requirementsValidator(
+  action: Action<ActionPayloadPlay>,
+  board: Map<Player, CardPlayed[]>,
+): Array<{ key: string; message: string }> {
   board = new Map(board.entries());
   const { payload } = action;
   const player = getPlayer(<string>action.from);
@@ -25,25 +28,27 @@ export function requirementsValidator(action: Action<ActionPayloadPlay>, board: 
       return null;
     }
 
-    const error = rules.find((rule) => {
-      const cardsByType = getCardsByRequirementType(rule.type);
+    const error = rules
+      .map((rule) => {
+        const cardsByType = getCardsByRequirementType(rule.type);
 
-      const cardsValid = cardsByType
-        .map((card) => {
-          let isValid: boolean;
+        const cardsValid = cardsByType
+          .map((card) => {
+            let isValid: boolean;
 
-          isValid = rule.cardType ? rule.cardType.indexOf(card.type) > -1 : true;
-          isValid = isValid && (rule.cardColor ? rule.cardColor.indexOf(card.color) > -1 : true);
-          return isValid;
-        })
-        .filter((v) => !!v);
-      if (cardsValid.length !== rule.quantity) {
-        return { rule: 'Rule Error' };
-      }
-      return null;
-    });
+            isValid = rule.cardType ? rule.cardType.indexOf(card.type) > -1 : true;
+            isValid = isValid && (rule.cardColor ? rule.cardColor.indexOf(card.color) > -1 : true);
+            return isValid;
+          })
+          .filter((v) => !!v);
+        if (cardsValid.length !== rule.quantity) {
+          return { key: 'rule', message: 'Rule Error' };
+        }
+        return null;
+      })
+      .filter((value) => !!value);
 
-    return error || null;
+    return error.length ? error : null;
   }
 
   function getCardsByRequirementType(type: RequirementType) {

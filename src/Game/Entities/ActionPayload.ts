@@ -32,7 +32,7 @@ export type ActionPayloadDiscard = {
 
 export type ActionPayloadError = {
   action: ActionsPayloadType.Error;
-  message: string;
+  errors: Array<{ key: string; message: string }>;
 };
 
 export type ActionPayloadPlay = {
