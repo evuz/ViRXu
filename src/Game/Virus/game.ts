@@ -12,6 +12,7 @@ import { random } from '../../Utils/random';
 import { ActionPayloadCurrentPlayer, ActionPayloadPlay } from '../Entities/ActionPayload';
 import { VirusCardType } from '../Enums/VirusCardType';
 import { CardPlayed } from '../Entities/CardPlayed';
+import { requirementsValidator } from '../Entities/Requirements/Validators';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
 
@@ -87,26 +88,37 @@ export function virusGenerator(numberOfPlayers = 4) {
       });
     });
 
-    myActions$.pipe(filter(({ payload }) => payload.action === ActionsPayloadType.Play)).subscribe((action) => {
-      const payload = <ActionPayloadPlay>action.payload;
-      const playerAction = players.find((player) => player.getId() === action.from);
-      const boardPlayer = board.get(playerAction);
+    myActions$
+      .pipe(filter(({ payload }) => payload.action === ActionsPayloadType.Play))
+      .subscribe((action: Action<ActionPayloadPlay>) => {
+        const payload = action.payload;
+        const playerAction = players.find((player) => player.getId() === action.from);
+        const boardPlayer = board.get(playerAction);
 
-      if (payload.cards.find((card) => card.type !== VirusCardType.Organ)) {
-        return;
-      }
+        if (payload.cards.find((card) => card.type !== VirusCardType.Organ)) {
+          return;
+        }
 
-      board.set(
-        playerAction,
-        boardPlayer.concat([{ cards: payload.cards, state: CardPlayed.calculateState(payload.cards) }]),
-      );
-      boardSubject.next(board);
+        const errors = requirementsValidator(action, board);
 
-      fireAction(EntitiesId.All, {
-        action: ActionsPayloadType.CurrentPlayer,
-        player: nextPlayer(),
+        if (errors) {
+          return fireAction(action.from, {
+            action: ActionsPayloadType.Error,
+            errors,
+          });
+        }
+
+        board.set(
+          playerAction,
+          boardPlayer.concat([{ cards: payload.cards, state: CardPlayed.calculateState(payload.cards) }]),
+        );
+        boardSubject.next(board);
+
+        fireAction(EntitiesId.All, {
+          action: ActionsPayloadType.CurrentPlayer,
+          player: nextPlayer(),
+        });
       });
-    });
   }
 
   function addPlayer(player: Player) {
