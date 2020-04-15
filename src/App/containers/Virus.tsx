@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
-import { switchMap, filter } from 'rxjs/operators';
+import { switchMap, filter, tap } from 'rxjs/operators';
 
 import { virusGenerator } from '../../Game/Virus/game';
 import { Player } from '../../Game/Entities/Player';
@@ -9,9 +9,11 @@ import { GameContext } from '../context/Game/GameContext';
 import { ActionsPayloadType } from '../../Game/Enums/ActionsPayloadType';
 import { Action } from '../../Game/Entities/Action';
 import { ActionPayloadError } from '../../Game/Entities/ActionPayload';
+import { ManageTurnContext, Turn } from '../context/ManageTurn/ManageTurnContext';
 
 export const Virus = () => {
   const { setContextGame } = useContext(GameContext);
+  const { setTurn } = useContext(ManageTurnContext);
 
   const [game] = useState(virusGenerator());
 
@@ -29,6 +31,7 @@ export const Virus = () => {
   useEffect(() => {
     const subscription = game?.start$
       .pipe(
+        tap(() => setTurn(Turn.Hand)),
         switchMap((actions$) => actions$),
         filter(({ payload }) => payload.action === ActionsPayloadType.Error),
       )
@@ -39,7 +42,7 @@ export const Virus = () => {
         });
       });
     () => subscription?.unsubscribe();
-  }, [game]);
+  }, [game, setTurn]);
 
   return (
     <div className="Virus">
