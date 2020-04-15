@@ -1,28 +1,33 @@
 import { Card } from './Card';
-import { CardPlayedState } from '../Enums/CardPlayedState';
+import { OrganCardState } from '../Enums/OrganCardState';
 import { VirusCardType } from '../Enums/VirusCardType';
 
-export type CardPlayed = {
-  state: CardPlayedState;
+export type IOrganCard = Card & {
+  type: VirusCardType.Organ;
+};
+
+export type OrganCard = {
+  state: OrganCardState;
+  organ: IOrganCard;
   cards: Card[];
 };
 
-export const CardPlayed = {
+export const OrganCard = {
   calculateState(cards: Card[]) {
     const medicines = cards.filter((card) => card.type === VirusCardType.Medicine).length;
     const virus = cards.filter((card) => card.type === VirusCardType.Virus).length;
     switch (medicines) {
       case 2:
-        return CardPlayedState.Immnunise;
+        return OrganCardState.Immnunise;
       case 1:
-        return CardPlayedState.Vaccinate;
+        return OrganCardState.Vaccinate;
     }
     switch (virus) {
       case 2:
-        return CardPlayedState.Extirpate;
+        return OrganCardState.Extirpate;
       case 1:
-        return CardPlayedState.Infect;
+        return OrganCardState.Infect;
     }
-    return CardPlayedState.Free;
+    return OrganCardState.Free;
   },
 };

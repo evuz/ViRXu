@@ -11,7 +11,7 @@ import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { random } from '../../Utils/random';
 import { ActionPayloadCurrentPlayer, ActionPayloadPlay } from '../Entities/ActionPayload';
 import { VirusCardType } from '../Enums/VirusCardType';
-import { CardPlayed } from '../Entities/CardPlayed';
+import { OrganCard, IOrganCard } from '../Entities/OrganCard';
 import { requirementsValidator } from '../Entities/Requirements/Validators';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
@@ -24,8 +24,8 @@ export function virusGenerator(numberOfPlayers = 4) {
 
   const id = EntitiesId.Game;
   const deck = virusDeck;
-  const board = new Map<Player, CardPlayed[]>();
-  const [boardSubject, board$] = createSubject<Map<Player, CardPlayed[]>>(() => new ReplaySubject(1));
+  const board = new Map<Player, OrganCard[]>();
+  const [boardSubject, board$] = createSubject<Map<Player, OrganCard[]>>(() => new ReplaySubject(1));
   const [playerSubject, player$] = createSubject<Player>();
   const [startSubject, start$] = createSubject<typeof gameActions$>();
   const [action$, fireAction] = actionableGenerator(id);
@@ -108,9 +108,12 @@ export function virusGenerator(numberOfPlayers = 4) {
           });
         }
 
+        // TODO: this is wrong but it works as long as we can't choose another type of card
         board.set(
           playerAction,
-          boardPlayer.concat([{ cards: payload.cards, state: CardPlayed.calculateState(payload.cards) }]),
+          boardPlayer.concat([
+            { cards: [], organ: <IOrganCard>payload.cards[0], state: OrganCard.calculateState(payload.cards) },
+          ]),
         );
         boardSubject.next(board);
 

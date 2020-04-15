@@ -1,24 +1,30 @@
 import { ActionsPayloadType } from '../../../Enums/ActionsPayloadType';
 import { EntitiesId } from '../../../Enums/EntitiesId';
 import { VirusCardType } from '../../../Enums/VirusCardType';
-import { pill, vaccine } from '../../../Virus/Cards/medicines';
 import { bone, brain, heart, liver, multiOrgan } from '../../../Virus/Cards/organs';
 import { Action } from '../../Action';
 import { ActionPayloadPlay } from '../../ActionPayload';
 import { Card } from '../../Card';
-import { CardPlayed } from '../../CardPlayed';
+import { OrganCard, IOrganCard } from '../../OrganCard';
 import { Player, playerGenerator } from '../../Player';
 import { requirement, RequirementApply, RequirementType } from '../../Requirements';
 import { requirementsValidator } from '../Validators';
 
 function createBoard(cardsByPlayer: Card[][][]) {
-  const board = new Map<Player, CardPlayed[]>();
+  const board = new Map<Player, OrganCard[]>();
   const players = cardsByPlayer.map((cardsByBoard, id) => {
     const player = playerGenerator({ id: `${id}`, name: `Player ${id}` });
-    const cardsPlayed = cardsByBoard.map((cards) => ({
-      cards,
-      state: CardPlayed.calculateState(cards),
-    }));
+    const cardsPlayed = cardsByBoard.map((cards) => {
+      const organ = <IOrganCard>cards[0];
+      if (organ.type !== VirusCardType.Organ) {
+        throw Error('First card must be an organ');
+      }
+      return {
+        organ,
+        cards: cards.slice(1),
+        state: OrganCard.calculateState(cards),
+      };
+    });
     board.set(player, cardsPlayed);
     return player;
   });
@@ -51,28 +57,6 @@ describe('RequirementsValidator', () => {
 
   describe('check rules', () => {
     describe('generics cases', () => {
-      test('return valid (type)', () => {
-        const [board, players] = createBoard([[[vaccine], [pill]], [[brain]]]);
-        const validation = requirementsValidator(
-          createAction(players[0].getId(), {
-            cards: [
-              {
-                ...brain,
-                requirements: [
-                  requirement(RequirementApply.Rules)
-                    .cards(0)
-                    .to(RequirementType.CardUser)
-                    .type([VirusCardType.Organ])
-                    .execute(),
-                ],
-              },
-            ],
-          }),
-          board,
-        );
-        expect(validation).toBeNull();
-      });
-
       test('return valid (color)', () => {
         const [board, players] = createBoard([[[heart], [brain]], [[liver]]]);
         const validation = requirementsValidator(
@@ -116,28 +100,6 @@ describe('RequirementsValidator', () => {
           board,
         );
         expect(validation).toBeNull();
-      });
-
-      test('return error (type)', () => {
-        const [board, players] = createBoard([[[vaccine], [pill]], [[brain]]]);
-        const validation = requirementsValidator(
-          createAction(players[0].getId(), {
-            cards: [
-              {
-                ...brain,
-                requirements: [
-                  requirement(RequirementApply.Rules)
-                    .cards(0)
-                    .to(RequirementType.CardBoard)
-                    .type([VirusCardType.Organ])
-                    .execute(),
-                ],
-              },
-            ],
-          }),
-          board,
-        );
-        expect(validation).toBeTruthy();
       });
 
       test('return error (color)', () => {

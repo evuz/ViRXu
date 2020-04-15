@@ -1,4 +1,4 @@
-export enum CardPlayedState {
+export enum OrganCardState {
   Free,
   Infect,
   Extirpate,

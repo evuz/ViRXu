@@ -1,13 +1,18 @@
 import { Action } from '../Action';
 import { ActionPayloadPlay } from '../ActionPayload';
 import { Card } from '../Card';
-import { CardPlayed } from '../CardPlayed';
+import { OrganCard } from '../OrganCard';
 import { Player } from '../Player';
 import { Requirement, RequirementApply, RequirementType } from '../Requirements';
+import { OrganCardState } from '../../Enums/OrganCardState';
+
+type Organ = Card & {
+  state: OrganCardState;
+};
 
 export function requirementsValidator(
   action: Action<ActionPayloadPlay>,
-  board: Map<Player, CardPlayed[]>,
+  board: Map<Player, OrganCard[]>,
 ): Array<{ key: string; message: string }> {
   board = new Map(board.entries());
   const { payload } = action;
@@ -52,23 +57,24 @@ export function requirementsValidator(
   }
 
   function getCardsByRequirementType(type: RequirementType) {
-    let cardsByPlayers: CardPlayed[][];
+    let organsByPlayers: OrganCard[][];
     if (type === RequirementType.CardBoard) {
       board.delete(player);
-      cardsByPlayers = Array.from(board.values());
+      organsByPlayers = Array.from(board.values());
     }
 
     if (type === RequirementType.CardUser) {
-      cardsByPlayers = [board.get(player)];
+      organsByPlayers = [board.get(player)];
     }
 
-    if (!cardsByPlayers) {
+    if (!organsByPlayers) {
       throw Error('Your requirement type is not valid');
     }
 
-    return cardsByPlayers.reduce((acc, cardsPlayed) => {
-      const playerCards: Card[] = cardsPlayed.reduce((acc, cardPlayed) => {
-        return acc.concat(cardPlayed.cards);
+    return organsByPlayers.reduce((acc, organsCard) => {
+      const playerCards: Card[] = organsCard.reduce((acc, organCard) => {
+        const organ: Organ = Object.assign({}, organCard.organ, { state: organCard.state });
+        return acc.concat(organCard.cards, organ);
       }, []);
       return acc.concat(playerCards);
     }, <Card[]>[]);

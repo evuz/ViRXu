@@ -6,7 +6,7 @@ import { playerGenerator, Player } from '../../Game/Entities/Player';
 import { BoardPlayer } from '../components/BoardPlayer';
 import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
 import { GameContext } from '../context/Game/GameContext';
-import { CardPlayed } from '../../Game/Entities/CardPlayed';
+import { OrganCard } from '../../Game/Entities/OrganCard';
 
 type BoardProps = {
   onPlayerReady(player: Player): void;
@@ -15,7 +15,7 @@ type BoardProps = {
 export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
   const { game } = useContext(GameContext);
   const currentPlayer = useContext(CurrentPlayerContext);
-  const [board, setBoard] = useState(new Map<Player, CardPlayed[]>());
+  const [board, setBoard] = useState(new Map<Player, OrganCard[]>());
   const [players] = useState([
     playerGenerator({ id: '1', name: 'Player 1' }),
     playerGenerator({ id: '2', name: 'Player 2' }),

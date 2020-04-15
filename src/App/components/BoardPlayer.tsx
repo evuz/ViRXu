@@ -1,14 +1,14 @@
 import React, { FC, useState, useEffect } from 'react';
 
 import { Button } from './Button';
-import { CardPlayed } from './CardPlayed';
+import { OrganCard as OrganCardComponent } from './OrganCard';
 import { Player } from '../../Game/Entities/Player';
 import { filterClassNames } from '../../Utils/filterClassNames';
-import { CardPlayed as ICardPlayed } from '../../Game/Entities/CardPlayed';
+import { OrganCard } from '../../Game/Entities/OrganCard';
 
 type BoardPlayer = {
   player: Player;
-  board: ICardPlayed[];
+  board: OrganCard[];
   active?: boolean;
 };
 
@@ -29,7 +29,7 @@ export const BoardPlayer: FC<BoardPlayer> = ({ player, board, active = false }) 
       {player.getName()}
       {!isReady ? <Button onClick={() => player.ready(true)}>Ready!</Button> : null}
       <div className="BoardPlayer__cards">
-        {board ? board.map((cards, index) => <CardPlayed key={index} card={cards} />) : null}
+        {board ? board.map((cards, index) => <OrganCardComponent key={index} card={cards} />) : null}
       </div>
     </div>
   );
