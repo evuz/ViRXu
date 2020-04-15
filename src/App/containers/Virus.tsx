@@ -4,16 +4,14 @@ import { switchMap, filter } from 'rxjs/operators';
 import { virusGenerator } from '../../Game/Virus/game';
 import { Player } from '../../Game/Entities/Player';
 import { Board } from './Board';
-import { HandPlayer } from '../components/HandPlayer';
+import { HandPlayer } from './HandPlayer';
 import { GameContext } from '../context/Game/GameContext';
-import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
 import { ActionsPayloadType } from '../../Game/Enums/ActionsPayloadType';
 import { Action } from '../../Game/Entities/Action';
 import { ActionPayloadError } from '../../Game/Entities/ActionPayload';
 
 export const Virus = () => {
   const { setContextGame } = useContext(GameContext);
-  const currentPlayer = useContext(CurrentPlayerContext);
 
   const [game] = useState(virusGenerator());
 
@@ -46,7 +44,7 @@ export const Virus = () => {
   return (
     <div className="Virus">
       <Board onPlayerReady={playerReady} />
-      {currentPlayer ? <HandPlayer player={currentPlayer} /> : null}
+      <HandPlayer />
     </div>
   );
 };

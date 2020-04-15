@@ -1,10 +1,10 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect, useContext } from 'react';
 
-import { Player } from '../../Game/Entities/Player';
 import { Card as ICard } from '../../Game/Entities/Card';
 
-import { Card } from './Card';
-import { Button } from './Button';
+import { Card } from '../components/Card';
+import { Button } from '../components/Button';
+import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
 
 function getSelections(mapCards: Map<ICard, boolean>): ICard[] {
   const selections = [];
@@ -16,21 +16,25 @@ function getSelections(mapCards: Map<ICard, boolean>): ICard[] {
   return selections;
 }
 
-type HandPlayerProps = {
-  player: Player;
-};
+type HandPlayerProps = {};
 
-export const HandPlayer: FC<HandPlayerProps> = ({ player }) => {
+export const HandPlayer: FC<HandPlayerProps> = () => {
+  const player = useContext(CurrentPlayerContext);
   const [cards, setCards] = useState<ICard[]>([]);
   const [cardsSelected, setCardsSelected] = useState<Map<ICard, boolean>>(new Map());
+
+  useEffect(() => {
+    const subscription = player?.hand$.subscribe((c) => setCards(c));
+    () => subscription?.unsubscribe();
+  }, [player]);
+
+  if (!player) {
+    return null;
+  }
+
   const numberCardsSelected = Array.from(cardsSelected.values()).filter((v) => !!v).length;
   const disableDiscard = !numberCardsSelected;
   const disablePlay = numberCardsSelected != 1;
-
-  useEffect(() => {
-    const subscription = player.hand$.subscribe((c) => setCards(c));
-    () => subscription.unsubscribe();
-  }, [player.hand$]);
 
   function selectCard(card) {
     setCardsSelected((prev) => {
