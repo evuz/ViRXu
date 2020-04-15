@@ -5,6 +5,8 @@ import { Card as ICard } from '../../Game/Entities/Card';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
+import { ManageTurnContext, Turn } from '../context/ManageTurn/ManageTurnContext';
+import { filterClassNames } from '../../Utils/filterClassNames';
 
 function getSelections(mapCards: Map<ICard, boolean>): ICard[] {
   const selections = [];
@@ -20,6 +22,8 @@ type HandPlayerProps = {};
 
 export const HandPlayer: FC<HandPlayerProps> = () => {
   const player = useContext(CurrentPlayerContext);
+  const { turn } = useContext(ManageTurnContext);
+
   const [cards, setCards] = useState<ICard[]>([]);
   const [cardsSelected, setCardsSelected] = useState<Map<ICard, boolean>>(new Map());
 
@@ -35,8 +39,16 @@ export const HandPlayer: FC<HandPlayerProps> = () => {
   const numberCardsSelected = Array.from(cardsSelected.values()).filter((v) => !!v).length;
   const disableDiscard = !numberCardsSelected;
   const disablePlay = numberCardsSelected != 1;
+  const isSelectable = turn === Turn.Hand;
+  const classNames = filterClassNames({
+    HandPlayer: true,
+    'HandPlayer--no-selectable': !isSelectable,
+  });
 
   function selectCard(card) {
+    if (!isSelectable) {
+      return;
+    }
     setCardsSelected((prev) => {
       const cardState = prev.get(card);
       prev.set(card, !cardState);
@@ -61,7 +73,7 @@ export const HandPlayer: FC<HandPlayerProps> = () => {
   }
 
   return (
-    <div className="HandPlayer">
+    <div className={classNames}>
       <div className="HandPlayer__name">{player.getName()}</div>
       <div className="HandPlayer__cards">
         {cards.map((card, index) => (
