@@ -9,11 +9,11 @@ import { GameContext } from '../context/Game/GameContext';
 import { ActionsPayloadType } from '../../Game/Enums/ActionsPayloadType';
 import { Action } from '../../Game/Entities/Action';
 import { ActionPayloadError } from '../../Game/Entities/ActionPayload';
-import { ManageTurnContext, Turn } from '../context/ManageTurn/ManageTurnContext';
+import { ManageSelectionContext, SelectionPlace } from '../context/ManageTurn/ManageSelectionContext';
 
 export const Virus = () => {
   const { setContextGame } = useContext(GameContext);
-  const { setTurn } = useContext(ManageTurnContext);
+  const { setSelectionRequirements } = useContext(ManageSelectionContext);
 
   const [game] = useState(virusGenerator());
 
@@ -31,7 +31,7 @@ export const Virus = () => {
   useEffect(() => {
     const subscription = game?.start$
       .pipe(
-        tap(() => setTurn(Turn.Hand)),
+        tap(() => setSelectionRequirements({ place: SelectionPlace.Hand })),
         switchMap((actions$) => actions$),
         filter(({ payload }) => payload.action === ActionsPayloadType.Error),
       )
@@ -42,7 +42,7 @@ export const Virus = () => {
         });
       });
     () => subscription?.unsubscribe();
-  }, [game, setTurn]);
+  }, [game, setSelectionRequirements]);
 
   return (
     <div className="Virus">
