@@ -6,11 +6,20 @@
   padding: $spacing-xs;
   background: get-color(dark);
   box-shadow: $shadow;
+  overflow: hidden;
 
   &--selected {
-    $border-size: to-rem(2px);
-    padding: calc(#{$spacing-xs} - #{$border-size});
-    border: $border-size solid get-color(accent);
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: rgba(get-color(primary), .2);
+    }
   }
 
   &--red {
