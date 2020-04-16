@@ -1,5 +1,5 @@
 import React, { createContext, useState, useCallback } from 'react';
-import { Requirement } from '../../../Game/Entities/Requirements';
+import { Card } from '../../../Game/Entities/Card';
 
 export const enum SelectionPlace {
   Board,
@@ -8,22 +8,18 @@ export const enum SelectionPlace {
 
 type SelectionRequirements = {
   place: SelectionPlace;
-  requirements?: Requirement[];
+  card?: Card;
 };
 
 type IManageSelectionContext = {
-  setSelectionRequirements({ place, requirements }: SelectionRequirements): void;
+  setSelectionRequirements({ place, card }: SelectionRequirements): void;
   selectionRequirements: SelectionRequirements;
 };
 
 export const ManageSelectionContext = createContext<IManageSelectionContext>(null);
 
 export function ManageSelectionState({ children }) {
-  const [selectionRequirements, setSelectionRequirementsState] = useState<SelectionRequirements>({ place: null });
-
-  const setSelectionRequirements = useCallback(({ place, requirements = [] }: SelectionRequirements) => {
-    setSelectionRequirementsState({ place, requirements });
-  }, []);
+  const [selectionRequirements, setSelectionRequirements] = useState<SelectionRequirements>({ place: null });
 
   const context = {
     selectionRequirements,

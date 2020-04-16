@@ -74,9 +74,9 @@ export function playerGenerator({ id, name }: PlayerItem) {
     return actions;
   }
 
-  function play(cards: Card[]) {
+  function play(card: Card, requirements?) {
     // TODO: remove cards when game say ok
-    fireAction(EntitiesId.Game, { action: ActionsPayloadType.Play, cards });
+    fireAction(EntitiesId.Game, { action: ActionsPayloadType.Play, cards: [card], requirements });
     return actions;
   }
 

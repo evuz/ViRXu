@@ -6,7 +6,13 @@
   padding: $spacing-xs;
   background: get-color(dark);
   box-shadow: $shadow;
+  transition: all 100ms;
   overflow: hidden;
+
+  &--selectable:hover {
+    transform: translateY(-$spacing-xs);
+    box-shadow: $shadow-l;
+  }
 
   &--selected {
     position: relative;

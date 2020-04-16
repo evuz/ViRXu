@@ -5,24 +5,16 @@ import { Card as ICard } from '../../Game/Entities/Card';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
-import { ManageSelectionContext, SelectionPlace } from '../context/ManageTurn/ManageSelectionContext';
+import { ManageSelectionContext, SelectionPlace } from '../context/ManageSelection/ManageSelectionContext';
 import { filterClassNames } from '../../Utils/filterClassNames';
-
-function getSelections(mapCards: Map<ICard, boolean>): ICard[] {
-  const selections = [];
-  mapCards.forEach((isSelected, card) => {
-    if (isSelected) {
-      selections.push(card);
-    }
-  });
-  return selections;
-}
+import { Requirement, RequirementApply } from '../../Game/Entities/Requirements';
+import { getSelections } from '../../Utils/getSelections';
 
 type HandPlayerProps = {};
 
 export const HandPlayer: FC<HandPlayerProps> = () => {
   const player = useContext(CurrentPlayerContext);
-  const { selectionRequirements } = useContext(ManageSelectionContext);
+  const { selectionRequirements, setSelectionRequirements } = useContext(ManageSelectionContext);
 
   const [cards, setCards] = useState<ICard[]>([]);
   const [cardsSelected, setCardsSelected] = useState<Map<ICard, boolean>>(new Map());
@@ -70,8 +62,20 @@ export const HandPlayer: FC<HandPlayerProps> = () => {
     }
 
     const selections = getSelections(cardsSelected);
+    const card = selections[0];
 
-    player.play(selections);
+    if (!card) {
+      return;
+    }
+
+    const selectionRequirements =
+      card.requirements?.filter((requirement: Requirement) => requirement.apply === RequirementApply.Selection) || [];
+
+    if (selectionRequirements.length) {
+      return setSelectionRequirements({ place: SelectionPlace.Board, card });
+    }
+
+    player.play(card);
     setCardsSelected(new Map());
   }
 

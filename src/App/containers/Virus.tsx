@@ -9,7 +9,7 @@ import { GameContext } from '../context/Game/GameContext';
 import { ActionsPayloadType } from '../../Game/Enums/ActionsPayloadType';
 import { Action } from '../../Game/Entities/Action';
 import { ActionPayloadError } from '../../Game/Entities/ActionPayload';
-import { ManageSelectionContext, SelectionPlace } from '../context/ManageTurn/ManageSelectionContext';
+import { ManageSelectionContext, SelectionPlace } from '../context/ManageSelection/ManageSelectionContext';
 
 export const Virus = () => {
   const { setContextGame } = useContext(GameContext);

@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { GameState } from './Game/GameContext';
 import { CurrentPlayerState } from './CurrentPlayer/CurrentPlayerContext';
-import { ManageSelectionState } from './ManageTurn/ManageSelectionContext';
+import { ManageSelectionState } from './ManageSelection/ManageSelectionContext';
 
 export const AppContext: FC = ({ children }) => {
   return (

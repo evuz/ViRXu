@@ -5,9 +5,15 @@ import { Card } from './Card';
 
 type CardPlayedProps = {
   card: IOrganCard;
+  selectable?: boolean;
+  onClick?: Function;
 };
 
-export const OrganCard: FC<CardPlayedProps> = ({ card: cardPlayed }) => {
+export const OrganCard: FC<CardPlayedProps> = ({ card: cardPlayed, selectable = false, onClick = () => {} }) => {
   const organ = cardPlayed.organ;
-  return <Card card={organ} />;
+  return (
+    <button onClick={() => onClick(cardPlayed)} disabled={!selectable}>
+      <Card selectable={selectable} card={organ} />
+    </button>
+  );
 };
