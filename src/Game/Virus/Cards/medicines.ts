@@ -1,7 +1,8 @@
 import { VirusCardType } from '../../Enums/VirusCardType';
 import { VirusCardColor } from '../../Enums/VirusCardColor';
-import { Card } from '../../Entities/Card';
+import { CardGenerator } from '../../Entities/Card';
 import { requirement, RequirementApply, RequirementType } from '../../Entities/Requirements';
+import { uid } from '../../../Utils/uid';
 
 function medicineRequirement(color: VirusCardColor) {
   return [
@@ -14,47 +15,57 @@ function medicineRequirement(color: VirusCardColor) {
   ];
 }
 
-export const kit: Card = {
-  id: null,
-  cardId: 'kit',
-  name: 'First Aid Kit',
-  type: VirusCardType.Medicine,
-  color: VirusCardColor.Multi,
-  requirements: medicineRequirement(null),
+export const kit: CardGenerator = () => {
+  return {
+    id: uid(6),
+    cardId: 'kit',
+    name: 'First Aid Kit',
+    type: VirusCardType.Medicine,
+    color: VirusCardColor.Multi,
+    requirements: medicineRequirement(null),
+  };
 };
 
-export const vaccine: Card = {
-  id: null,
-  cardId: 'vaccine',
-  name: 'Vaccine',
-  type: VirusCardType.Medicine,
-  color: VirusCardColor.Red,
-  requirements: medicineRequirement(VirusCardColor.Red),
+export const vaccine: CardGenerator = () => {
+  return {
+    id: uid(6),
+    cardId: 'vaccine',
+    name: 'Vaccine',
+    type: VirusCardType.Medicine,
+    color: VirusCardColor.Red,
+    requirements: medicineRequirement(VirusCardColor.Red),
+  };
 };
 
-export const syrup: Card = {
-  id: null,
-  cardId: 'syrup',
-  name: 'Syrup',
-  type: VirusCardType.Medicine,
-  color: VirusCardColor.Green,
-  requirements: medicineRequirement(VirusCardColor.Green),
+export const syrup: CardGenerator = () => {
+  return {
+    id: uid(6),
+    cardId: 'syrup',
+    name: 'Syrup',
+    type: VirusCardType.Medicine,
+    color: VirusCardColor.Green,
+    requirements: medicineRequirement(VirusCardColor.Green),
+  };
 };
 
-export const pill: Card = {
-  id: null,
-  cardId: 'pill',
-  name: 'Pill',
-  type: VirusCardType.Medicine,
-  color: VirusCardColor.Blue,
-  requirements: medicineRequirement(VirusCardColor.Blue),
+export const pill: CardGenerator = () => {
+  return {
+    id: uid(6),
+    cardId: 'pill',
+    name: 'Pill',
+    type: VirusCardType.Medicine,
+    color: VirusCardColor.Blue,
+    requirements: medicineRequirement(VirusCardColor.Blue),
+  };
 };
 
-export const plaster: Card = {
-  id: null,
-  cardId: 'plaster',
-  name: 'Plaster',
-  type: VirusCardType.Medicine,
-  color: VirusCardColor.Yellow,
-  requirements: medicineRequirement(VirusCardColor.Yellow),
+export const plaster: CardGenerator = () => {
+  return {
+    id: uid(6),
+    cardId: 'plaster',
+    name: 'Plaster',
+    type: VirusCardType.Medicine,
+    color: VirusCardColor.Yellow,
+    requirements: medicineRequirement(VirusCardColor.Yellow),
+  };
 };

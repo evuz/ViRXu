@@ -1,8 +1,7 @@
-import { Card } from './Card';
-import { uid } from '../../Utils/uid';
+import { Card, CardGenerator } from './Card';
 
 type DeckItem = {
-  card: Card;
+  card: CardGenerator;
   quantity: number;
 };
 
@@ -10,6 +9,6 @@ export type Deck = Card[];
 
 export function deckGenerator(deck: DeckItem[]): Deck {
   return deck.reduce((acc, item) => {
-    return acc.concat(Array.from({ length: item.quantity }).map(() => Object.assign({}, item.card, { id: uid(6) })));
+    return acc.concat(Array.from({ length: item.quantity }).map(() => item.card()));
   }, []);
 }

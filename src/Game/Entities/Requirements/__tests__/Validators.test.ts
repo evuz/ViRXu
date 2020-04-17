@@ -1,7 +1,7 @@
 import { ActionsPayloadType } from '../../../Enums/ActionsPayloadType';
 import { EntitiesId } from '../../../Enums/EntitiesId';
 import { VirusCardType } from '../../../Enums/VirusCardType';
-import { bone, brain, heart, liver, multiOrgan } from '../../../Virus/Cards/organs';
+import { bone as b, brain as br, heart as h, liver as l, multiOrgan as mo } from '../../../Virus/Cards/organs';
 import { Action } from '../../Action';
 import { ActionPayloadPlay } from '../../ActionPayload';
 import { Card } from '../../Card';
@@ -44,6 +44,20 @@ function createAction(from: string, payload: Omit<ActionPayloadPlay, 'action'>):
 }
 
 describe('RequirementsValidator', () => {
+  let bone: Card;
+  let brain: Card;
+  let heart: Card;
+  let liver: Card;
+  let multiOrgan: Card;
+
+  beforeEach(() => {
+    bone = b();
+    brain = br();
+    heart = h();
+    liver = l();
+    multiOrgan = mo();
+  });
+
   test("should return null if cards haven't requirements", () => {
     const [board, players] = createBoard([[[heart], [bone]], [[heart]]]);
     const validation = requirementsValidator(

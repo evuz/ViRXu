@@ -10,3 +10,5 @@ export type Card = {
   color: VirusCardColor;
   requirements?: Requirement[];
 };
+
+export type CardGenerator = () => Card;
