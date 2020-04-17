@@ -15,7 +15,8 @@ function medicineRequirement(color: VirusCardColor) {
 }
 
 export const kit: Card = {
-  id: 'kit',
+  id: null,
+  cardId: 'kit',
   name: 'First Aid Kit',
   type: VirusCardType.Medicine,
   color: VirusCardColor.Multi,
@@ -23,7 +24,8 @@ export const kit: Card = {
 };
 
 export const vaccine: Card = {
-  id: 'vaccine',
+  id: null,
+  cardId: 'vaccine',
   name: 'Vaccine',
   type: VirusCardType.Medicine,
   color: VirusCardColor.Red,
@@ -31,7 +33,8 @@ export const vaccine: Card = {
 };
 
 export const syrup: Card = {
-  id: 'syrup',
+  id: null,
+  cardId: 'syrup',
   name: 'Syrup',
   type: VirusCardType.Medicine,
   color: VirusCardColor.Green,
@@ -39,7 +42,8 @@ export const syrup: Card = {
 };
 
 export const pill: Card = {
-  id: 'pill',
+  id: null,
+  cardId: 'pill',
   name: 'Pill',
   type: VirusCardType.Medicine,
   color: VirusCardColor.Blue,
@@ -47,7 +51,8 @@ export const pill: Card = {
 };
 
 export const plaster: Card = {
-  id: 'plaster',
+  id: null,
+  cardId: 'plaster',
   name: 'Plaster',
   type: VirusCardType.Medicine,
   color: VirusCardColor.Yellow,

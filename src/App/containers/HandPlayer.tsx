@@ -84,7 +84,7 @@ export const HandPlayer: FC<HandPlayerProps> = () => {
       <div className="HandPlayer__name">{player.getName()}</div>
       <div className="HandPlayer__cards">
         {cards.map((card, index) => (
-          <button onClick={() => selectCard(card)} key={`${index}-${card.id}`}>
+          <button onClick={() => selectCard(card)} key={card.id}>
             <Card card={card} selected={cardsSelected.get(card)} />
           </button>
         ))}

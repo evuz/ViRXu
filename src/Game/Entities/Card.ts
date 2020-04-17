@@ -4,6 +4,7 @@ import { Requirement } from './Requirements';
 
 export type Card = {
   id: string;
+  cardId: string;
   name: string;
   type: VirusCardType;
   color: VirusCardColor;

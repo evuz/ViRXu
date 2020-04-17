@@ -15,7 +15,8 @@ function virusRequirement(color: VirusCardColor) {
 }
 
 export const multiVirus: Card = {
-  id: 'multiVirus',
+  id: null,
+  cardId: 'multiVirus',
   name: 'Multicolor virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Multi,
@@ -23,7 +24,8 @@ export const multiVirus: Card = {
 };
 
 export const redVirus: Card = {
-  id: 'redVirus',
+  id: null,
+  cardId: 'redVirus',
   name: 'Red Virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Red,
@@ -31,7 +33,8 @@ export const redVirus: Card = {
 };
 
 export const greenVirus: Card = {
-  id: 'greenVirus',
+  id: null,
+  cardId: 'greenVirus',
   name: 'Green Virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Green,
@@ -39,7 +42,8 @@ export const greenVirus: Card = {
 };
 
 export const blueVirus: Card = {
-  id: 'blueVirus',
+  id: null,
+  cardId: 'blueVirus',
   name: 'Blue Virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Blue,
@@ -47,7 +51,8 @@ export const blueVirus: Card = {
 };
 
 export const yellowVirus: Card = {
-  id: 'yellowVirus',
+  id: null,
+  cardId: 'yellowVirus',
   name: 'Yellow Virus',
   type: VirusCardType.Virus,
   color: VirusCardColor.Yellow,

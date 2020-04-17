@@ -15,14 +15,16 @@ function organsRequirement(color: VirusCardColor) {
 }
 
 export const multiOrgan: Card = {
-  id: 'multiOrgan',
+  id: null,
+  cardId: 'multiOrgan',
   name: 'Multicolor organ',
   type: VirusCardType.Organ,
   color: VirusCardColor.Multi,
 };
 
 export const heart: Card = {
-  id: 'heart',
+  id: null,
+  cardId: 'heart',
   name: 'Heart',
   type: VirusCardType.Organ,
   color: VirusCardColor.Red,
@@ -30,7 +32,8 @@ export const heart: Card = {
 };
 
 export const liver: Card = {
-  id: 'liver',
+  id: null,
+  cardId: 'liver',
   name: 'Liver',
   type: VirusCardType.Organ,
   color: VirusCardColor.Green,
@@ -38,7 +41,8 @@ export const liver: Card = {
 };
 
 export const brain: Card = {
-  id: 'brain',
+  id: null,
+  cardId: 'brain',
   name: 'Brain',
   type: VirusCardType.Organ,
   color: VirusCardColor.Blue,
@@ -46,7 +50,8 @@ export const brain: Card = {
 };
 
 export const bone: Card = {
-  id: 'bone',
+  id: null,
+  cardId: 'bone',
   name: 'Bone',
   type: VirusCardType.Organ,
   color: VirusCardColor.Yellow,

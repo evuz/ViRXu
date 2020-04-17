@@ -3,35 +3,40 @@ import { VirusCardColor } from '../../Enums/VirusCardColor';
 import { Card } from '../../Entities/Card';
 
 export const infection: Card = {
-  id: 'infection',
+  id: null,
+  cardId: 'infection',
   name: 'Infection',
   type: VirusCardType.Treatment,
   color: VirusCardColor.Multi,
 };
 
 export const organThief: Card = {
-  id: 'organThief',
+  id: null,
+  cardId: 'organThief',
   name: 'Organ thief',
   type: VirusCardType.Treatment,
   color: VirusCardColor.Multi,
 };
 
 export const transplant: Card = {
-  id: 'transplant',
+  id: null,
+  cardId: 'transplant',
   name: 'Transplant',
   type: VirusCardType.Treatment,
   color: VirusCardColor.Multi,
 };
 
 export const latexGlove: Card = {
-  id: 'latexGlove',
+  id: null,
+  cardId: 'latexGlove',
   name: 'Latex glove',
   type: VirusCardType.Treatment,
   color: VirusCardColor.Multi,
 };
 
 export const medicalError: Card = {
-  id: 'medicalError',
+  id: null,
+  cardId: 'medicalError',
   name: 'Medical error',
   type: VirusCardType.Treatment,
   color: VirusCardColor.Multi,
