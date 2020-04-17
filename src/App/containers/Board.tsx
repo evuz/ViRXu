@@ -56,7 +56,7 @@ export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
     if (selections.length === requirements.length) {
       currentPlayer.play(selectionRequirements.card, getSelections(cardsSelected));
     }
-  }, [cardsSelected, currentPlayer, selectionRequirements.card]);
+  }, [boardSelectable, cardsSelected, currentPlayer, selectionRequirements.card]);
 
   function selectCard(card) {
     if (!boardSelectable) {
