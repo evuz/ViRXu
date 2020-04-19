@@ -3,6 +3,7 @@ import { VirusCardColor } from '../../Enums/VirusCardColor';
 import { CardGenerator } from '../../Entities/Card';
 import { requirement, RequirementApply, RequirementType } from '../../Entities/Requirements';
 import { uid } from '../../../Utils/uid';
+import { OrganCardState } from '../../Enums/OrganCardState';
 
 function virusRequirement(color: VirusCardColor) {
   return [
@@ -10,6 +11,7 @@ function virusRequirement(color: VirusCardColor) {
       .to(RequirementType.CardBoard)
       .cards(1)
       .type([VirusCardType.Organ])
+      .state([OrganCardState.Free, OrganCardState.Infect, OrganCardState.Vaccinate])
       .color([color])
       .execute(),
   ];

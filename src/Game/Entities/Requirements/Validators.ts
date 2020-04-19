@@ -5,50 +5,83 @@ import { OrganCard } from '../OrganCard';
 import { Player } from '../Player';
 import { Requirement, RequirementApply, RequirementType } from '../Requirements';
 import { OrganCardState } from '../../Enums/OrganCardState';
+import { VirusCardType } from '../../Enums/VirusCardType';
 
 type Organ = Card & {
   state: OrganCardState;
 };
 
+export type ErrorMessage = { key: string; message: string };
+
 export function requirementsValidator(
   action: Action<ActionPayloadPlay>,
   board: Map<Player, OrganCard[]>,
-): Array<{ key: string; message: string }> {
+): ErrorMessage[] {
   board = new Map(board.entries());
   const { payload } = action;
-  const player = getPlayer(<string>action.from);
+  const player = getPlayer(<string>action.from, board);
   const allRequirements: Requirement[] = payload.cards.reduce((acc, card) => acc.concat(card.requirements || []), []);
 
   if (!allRequirements.length) {
     return null;
   }
 
-  const rules = allRequirements.filter((requirement) => requirement.apply === RequirementApply.Rules);
-  const validationRules = checkRules();
+  const rulesRequirements = allRequirements.filter((r) => r.apply === RequirementApply.Rules);
+  const validationRulesRequirements = checkRules();
 
-  return validationRules;
+  const selectionsRequirements = allRequirements.filter((r) => r.apply === RequirementApply.Selection);
+  const validationSelectionRequirements = checkValidations();
+
+  const validations = validationRulesRequirements || validationSelectionRequirements;
+
+  return validations || null;
+
+  function checkValidations() {
+    if (!selectionsRequirements.length) {
+      return null;
+    }
+    const cardsSelected = payload.requirements || [];
+
+    const error = selectionsRequirements
+      .map((requirement) => {
+        const cardsByType = getCardsByRequirementType(requirement.type);
+
+        const selectionsFromBoard = cardsSelected
+          .map((card) => cardsByType.find((c) => c.id === card.id))
+          .filter((card) => !!card);
+
+        if (selectionsFromBoard.length !== cardsSelected.length) {
+          return { key: 'selection', message: 'Selection not allowed' };
+        }
+
+        const cardsValid = validator(selectionsFromBoard, requirement);
+
+        if (cardsValid.length !== requirement.quantity) {
+          return { key: 'selection', message: 'Selection Error' };
+        }
+
+        return null;
+      })
+      .filter((value) => !!value);
+
+    return error.length ? error : null;
+  }
 
   function checkRules() {
-    if (!rules.length) {
+    if (!rulesRequirements.length) {
       return null;
     }
 
-    const error = rules
-      .map((rule) => {
-        const cardsByType = getCardsByRequirementType(rule.type);
+    const error = rulesRequirements
+      .map((requirement) => {
+        const cardsByType = getCardsByRequirementType(requirement.type);
 
-        const cardsValid = cardsByType
-          .map((card) => {
-            let isValid: boolean;
+        const cardsValid = validator(cardsByType, requirement);
 
-            isValid = rule.cardType ? rule.cardType.indexOf(card.type) > -1 : true;
-            isValid = isValid && (rule.cardColor ? rule.cardColor.indexOf(card.color) > -1 : true);
-            return isValid;
-          })
-          .filter((v) => !!v);
-        if (cardsValid.length !== rule.quantity) {
+        if (cardsValid.length !== requirement.quantity) {
           return { key: 'rule', message: 'Rule Error' };
         }
+
         return null;
       })
       .filter((value) => !!value);
@@ -79,9 +112,26 @@ export function requirementsValidator(
       return acc.concat(playerCards);
     }, <Card[]>[]);
   }
+}
 
-  function getPlayer(id: string) {
-    const players = Array.from(board.keys());
-    return players.filter((p) => p.getId() === id)[0];
-  }
+function getPlayer(id: string, board: Map<Player, OrganCard[]>) {
+  const players = Array.from(board.keys());
+  return players.filter((p) => p.getId() === id)[0];
+}
+
+function validator(cards: Card[], requirement: Requirement): boolean[] {
+  return cards
+    .map((card) => {
+      let isValid: boolean;
+
+      isValid = requirement.cardType ? requirement.cardType.indexOf(card.type) > -1 : true;
+      isValid = isValid && (requirement.cardColor ? requirement.cardColor.indexOf(card.color) > -1 : true);
+
+      if (card.type === VirusCardType.Organ && requirement.cardState) {
+        isValid = isValid && requirement.cardState.indexOf((<Organ>card).state) > -1;
+      }
+
+      return isValid;
+    })
+    .filter((value) => !!value);
 }

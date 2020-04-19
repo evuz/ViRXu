@@ -1,5 +1,6 @@
 import { VirusCardColor } from '../../Enums/VirusCardColor';
 import { VirusCardType } from '../../Enums/VirusCardType';
+import { OrganCardState } from '../../Enums/OrganCardState';
 
 export const enum RequirementType {
   CardBoard,
@@ -15,6 +16,7 @@ export type Requirement = {
   type: RequirementType;
   apply: RequirementApply;
   quantity: number;
+  cardState?: OrganCardState[];
   cardType?: VirusCardType[];
   cardColor?: VirusCardColor[];
 };
@@ -22,6 +24,7 @@ export type Requirement = {
 export function requirement(apply: RequirementApply) {
   let typeValue: RequirementType;
   let quantity = 1;
+  let cardState: OrganCardState[];
   let cardType: VirusCardType[];
   let cardColor: VirusCardColor[];
 
@@ -45,6 +48,11 @@ export function requirement(apply: RequirementApply) {
     return actions;
   }
 
+  function state(v: OrganCardState[]) {
+    cardState = v;
+    return actions;
+  }
+
   function execute(): Requirement {
     return {
       type: typeValue,
@@ -52,6 +60,7 @@ export function requirement(apply: RequirementApply) {
       quantity,
       cardType,
       cardColor,
+      cardState,
     };
   }
 
@@ -61,6 +70,7 @@ export function requirement(apply: RequirementApply) {
     cards,
     type,
     color,
+    state,
   };
 
   return actions;

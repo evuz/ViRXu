@@ -2,6 +2,8 @@ import { ActionsPayloadType } from '../../../Enums/ActionsPayloadType';
 import { EntitiesId } from '../../../Enums/EntitiesId';
 import { VirusCardType } from '../../../Enums/VirusCardType';
 import { bone as b, brain as br, heart as h, liver as l, multiOrgan as mo } from '../../../Virus/Cards/organs';
+import { pill as p } from '../../../Virus/Cards/medicines';
+import { redVirus as rv } from '../../../Virus/Cards/virus';
 import { Action } from '../../Action';
 import { ActionPayloadPlay } from '../../ActionPayload';
 import { Card } from '../../Card';
@@ -9,6 +11,8 @@ import { OrganCard, IOrganCard } from '../../OrganCard';
 import { Player, playerGenerator } from '../../Player';
 import { requirement, RequirementApply, RequirementType } from '../../Requirements';
 import { requirementsValidator } from '../Validators';
+import { OrganCardState } from '../../../Enums/OrganCardState';
+import { VirusCardColor } from '../../../Enums/VirusCardColor';
 
 function createBoard(cardsByPlayer: Card[][][]) {
   const board = new Map<Player, OrganCard[]>();
@@ -49,6 +53,8 @@ describe('RequirementsValidator', () => {
   let heart: Card;
   let liver: Card;
   let multiOrgan: Card;
+  let pill: Card;
+  let redVirus: Card;
 
   beforeEach(() => {
     bone = b();
@@ -56,6 +62,8 @@ describe('RequirementsValidator', () => {
     heart = h();
     liver = l();
     multiOrgan = mo();
+    pill = p();
+    redVirus = rv();
   });
 
   test("should return null if cards haven't requirements", () => {
@@ -294,6 +302,201 @@ describe('RequirementsValidator', () => {
         board,
       );
       expect(validation).toBeNull();
+    });
+  });
+
+  describe('check selections', () => {
+    describe('generic cases', () => {
+      test('should return error because color is not included', () => {
+        const [board, players] = createBoard([[[brain], [heart]], [[liver]]]);
+        pill.requirements = [
+          requirement(RequirementApply.Selection)
+            .to(RequirementType.CardUser)
+            .cards(1)
+            .color([VirusCardColor.Blue])
+            .execute(),
+        ];
+        const validation = requirementsValidator(
+          createAction(players[0].getId(), {
+            cards: [pill],
+            requirements: [board.get(players[0])[1].organ],
+          }),
+          board,
+        );
+        expect(validation).not.toBeNull();
+        expect(validation.map((v) => v.message)).toContain('Selection Error');
+      });
+
+      test('should return ok because color is included', () => {
+        const [board, players] = createBoard([[[brain], [heart]], [[liver]]]);
+        pill.requirements = [
+          requirement(RequirementApply.Selection)
+            .to(RequirementType.CardUser)
+            .cards(1)
+            .color([VirusCardColor.Blue, VirusCardColor.Red])
+            .execute(),
+        ];
+        const validation = requirementsValidator(
+          createAction(players[0].getId(), {
+            cards: [pill],
+            requirements: [board.get(players[0])[1].organ],
+          }),
+          board,
+        );
+        expect(validation).toBeNull();
+      });
+
+      test('should return ok because state is included', () => {
+        const [board, players] = createBoard([[[brain], [heart]], [[liver]]]);
+        const heartCard = board.get(players[0])[1];
+        pill.requirements = [
+          requirement(RequirementApply.Selection)
+            .to(RequirementType.CardUser)
+            .cards(1)
+            .state([OrganCardState.Free, OrganCardState.Infect, OrganCardState.Vaccinate])
+            .execute(),
+        ];
+        heartCard.state = OrganCardState.Free;
+        const validation = requirementsValidator(
+          createAction(players[0].getId(), {
+            cards: [pill],
+            requirements: [heartCard.organ],
+          }),
+          board,
+        );
+        expect(validation).toBeNull();
+      });
+
+      test('should return error because state is not included', () => {
+        const [board, players] = createBoard([[[brain], [heart]], [[liver]]]);
+        const brainCard = board.get(players[0])[0];
+        pill.requirements = [
+          requirement(RequirementApply.Selection)
+            .to(RequirementType.CardUser)
+            .cards(1)
+            .state([OrganCardState.Free, OrganCardState.Infect, OrganCardState.Vaccinate])
+            .execute(),
+        ];
+        brainCard.state = OrganCardState.Immnunise;
+        const validation = requirementsValidator(
+          createAction(players[0].getId(), {
+            cards: [pill],
+            requirements: [brainCard.organ],
+          }),
+          board,
+        );
+        expect(validation).not.toBeNull();
+        expect(validation.map((v) => v.message)).toContain('Selection Error');
+      });
+
+      test('should no verify state if card selected is not a Organ', () => {
+        const [board, players] = createBoard([[[brain], [heart]], [[heart, redVirus, redVirus]]]);
+        const heartCard = board.get(players[1])[0];
+        pill.requirements = [
+          requirement(RequirementApply.Selection)
+            .to(RequirementType.CardBoard)
+            .cards(1)
+            .state([OrganCardState.Free, OrganCardState.Infect, OrganCardState.Vaccinate])
+            .execute(),
+        ];
+        heartCard.state = OrganCardState.Extirpate;
+        const validation = requirementsValidator(
+          createAction(players[0].getId(), {
+            cards: [pill],
+            requirements: [heartCard.cards[0]],
+          }),
+          board,
+        );
+        expect(validation).toBeNull();
+      });
+
+      test('should verify state even is null', () => {
+        const [board, players] = createBoard([[[brain], [heart]], [[heart, redVirus, redVirus]]]);
+        const heartCard = board.get(players[1])[0];
+        pill.requirements = [
+          requirement(RequirementApply.Selection)
+            .to(RequirementType.CardBoard)
+            .cards(1)
+            .state([OrganCardState.Free, OrganCardState.Infect, OrganCardState.Vaccinate])
+            .execute(),
+        ];
+        heartCard.state = null;
+        const validation = requirementsValidator(
+          createAction(players[0].getId(), {
+            cards: [pill],
+            requirements: [heartCard.organ],
+          }),
+          board,
+        );
+        expect(validation).not.toBeNull();
+        expect(validation.map((v) => v.message)).toContain('Selection Error');
+      });
+
+      test('should return error because card is not in a board', () => {
+        const [board, players] = createBoard([[[brain], [heart]], [[liver]]]);
+        pill.requirements = [
+          requirement(RequirementApply.Selection)
+            .to(RequirementType.CardBoard)
+            .cards(1)
+            .type([VirusCardType.Organ])
+            .state([OrganCardState.Free, OrganCardState.Infect, OrganCardState.Vaccinate])
+            .color([VirusCardColor.Blue])
+            .execute(),
+        ];
+        const validation = requirementsValidator(
+          createAction(players[0].getId(), {
+            cards: [pill],
+            requirements: [multiOrgan],
+          }),
+          board,
+        );
+        expect(validation).not.toBeNull();
+        expect(validation.map((v) => v.message)).toContain('Selection not allowed');
+      });
+
+      test('should return error because  card is not in a correct board (user board)', () => {
+        const [board, players] = createBoard([[[brain], [heart]], [[liver]]]);
+        pill.requirements = [
+          requirement(RequirementApply.Selection)
+            .to(RequirementType.CardUser)
+            .cards(1)
+            .type([VirusCardType.Organ])
+            .state([OrganCardState.Free, OrganCardState.Infect, OrganCardState.Vaccinate])
+            .color([VirusCardColor.Blue])
+            .execute(),
+        ];
+        const validation = requirementsValidator(
+          createAction(players[0].getId(), {
+            cards: [pill],
+            requirements: [board.get(players[1])[0].organ],
+          }),
+          board,
+        );
+        expect(validation).not.toBeNull();
+        expect(validation.map((v) => v.message)).toContain('Selection not allowed');
+      });
+
+      test('should return error because card is not in a correct board (board)', () => {
+        const [board, players] = createBoard([[[brain], [heart]], [[liver]]]);
+        pill.requirements = [
+          requirement(RequirementApply.Selection)
+            .to(RequirementType.CardBoard)
+            .cards(1)
+            .type([VirusCardType.Organ])
+            .state([OrganCardState.Free, OrganCardState.Infect, OrganCardState.Vaccinate])
+            .color([VirusCardColor.Blue])
+            .execute(),
+        ];
+        const validation = requirementsValidator(
+          createAction(players[0].getId(), {
+            cards: [pill],
+            requirements: [board.get(players[0])[1].organ],
+          }),
+          board,
+        );
+        expect(validation).not.toBeNull();
+        expect(validation.map((v) => v.message)).toContain('Selection not allowed');
+      });
     });
   });
 });
