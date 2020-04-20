@@ -6,6 +6,7 @@ import { Requirement, RequirementApply, RequirementType } from '../Requirements'
 import { OrganCardState } from '../../Enums/OrganCardState';
 import { VirusCardType } from '../../Enums/VirusCardType';
 import { Board } from '../Board';
+import { getPlayer } from '../../../Utils/getPlayer';
 
 type Organ = Card & {
   state: OrganCardState;
@@ -109,11 +110,6 @@ export function requirementsValidator(action: Action<ActionPayloadPlay>, board: 
       return acc.concat(playerCards);
     }, <Card[]>[]);
   }
-}
-
-function getPlayer(id: string, board: Board) {
-  const players = Array.from(board.keys());
-  return players.filter((p) => p.getId() === id)[0];
 }
 
 function validator(cards: Card[], requirement: Requirement): boolean[] {

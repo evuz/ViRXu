@@ -10,8 +10,6 @@ import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { random } from '../../Utils/random';
 import { ActionPayloadCurrentPlayer, ActionPayloadPlay } from '../Entities/ActionPayload';
-import { VirusCardType } from '../Enums/VirusCardType';
-import { OrganCard, IOrganCard } from '../Entities/OrganCard';
 import { requirementsValidator } from '../Entities/Requirements/Validators';
 import { Board } from '../Entities/Board';
 
@@ -22,10 +20,10 @@ export function virusGenerator(numberOfPlayers = 4) {
   let players: Player[] = [];
   let currentPlayer: Player = null;
   let gameActions$: Observable<Action>;
+  let board: Board = new Map();
 
   const id = EntitiesId.Game;
   const deck = virusDeck;
-  const board: Board = new Map();
   const [boardSubject, board$] = createSubject<Board>(() => new ReplaySubject(1));
   const [playerSubject, player$] = createSubject<Player>();
   const [startSubject, start$] = createSubject<typeof gameActions$>();
@@ -93,13 +91,12 @@ export function virusGenerator(numberOfPlayers = 4) {
       .pipe(filter(({ payload }) => payload.action === ActionsPayloadType.Play))
       .subscribe((action: Action<ActionPayloadPlay>) => {
         const payload = action.payload;
-        const playerAction = players.find((player) => player.getId() === action.from);
-        const boardPlayer = board.get(playerAction);
 
-        if (payload.cards.find((card) => card.type !== VirusCardType.Organ)) {
-          return;
+        if (payload.cards.length !== 1) {
+          throw Error('Can only play one card at a time');
         }
 
+        const card = payload.cards[0];
         const errors = requirementsValidator(action, board);
 
         if (errors) {
@@ -109,14 +106,14 @@ export function virusGenerator(numberOfPlayers = 4) {
           });
         }
 
-        // TODO: this is wrong but it works as long as we can't choose another type of card
-        board.set(
-          playerAction,
-          boardPlayer.concat([
-            { cards: [], organ: <IOrganCard>payload.cards[0], state: OrganCard.calculateState(payload.cards) },
-          ]),
-        );
-        boardSubject.next(board);
+        console.log(action);
+
+        if (card.action) {
+          board = new Map(card.action(action, board).entries());
+          boardSubject.next(board);
+        }
+
+        console.log(board);
 
         fireAction(EntitiesId.All, {
           action: ActionsPayloadType.CurrentPlayer,
