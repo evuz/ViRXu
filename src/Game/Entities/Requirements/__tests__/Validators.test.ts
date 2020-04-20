@@ -8,14 +8,15 @@ import { Action } from '../../Action';
 import { ActionPayloadPlay } from '../../ActionPayload';
 import { Card } from '../../Card';
 import { OrganCard, IOrganCard } from '../../OrganCard';
-import { Player, playerGenerator } from '../../Player';
+import { playerGenerator } from '../../Player';
 import { requirement, RequirementApply, RequirementType } from '../../Requirements';
 import { requirementsValidator } from '../Validators';
 import { OrganCardState } from '../../../Enums/OrganCardState';
 import { VirusCardColor } from '../../../Enums/VirusCardColor';
+import { Board } from '../../Board';
 
 function createBoard(cardsByPlayer: Card[][][]) {
-  const board = new Map<Player, OrganCard[]>();
+  const board: Board = new Map();
   const players = cardsByPlayer.map((cardsByBoard, id) => {
     const player = playerGenerator({ id: `${id}`, name: `Player ${id}` });
     const cardsPlayed = cardsByBoard.map((cards) => {

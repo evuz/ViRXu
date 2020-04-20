@@ -2,10 +2,10 @@ import { Action } from '../Action';
 import { ActionPayloadPlay } from '../ActionPayload';
 import { Card } from '../Card';
 import { OrganCard } from '../OrganCard';
-import { Player } from '../Player';
 import { Requirement, RequirementApply, RequirementType } from '../Requirements';
 import { OrganCardState } from '../../Enums/OrganCardState';
 import { VirusCardType } from '../../Enums/VirusCardType';
+import { Board } from '../Board';
 
 type Organ = Card & {
   state: OrganCardState;
@@ -13,10 +13,7 @@ type Organ = Card & {
 
 export type ErrorMessage = { key: string; message: string };
 
-export function requirementsValidator(
-  action: Action<ActionPayloadPlay>,
-  board: Map<Player, OrganCard[]>,
-): ErrorMessage[] {
+export function requirementsValidator(action: Action<ActionPayloadPlay>, board: Board): ErrorMessage[] {
   board = new Map(board.entries());
   const { payload } = action;
   const player = getPlayer(<string>action.from, board);
@@ -114,7 +111,7 @@ export function requirementsValidator(
   }
 }
 
-function getPlayer(id: string, board: Map<Player, OrganCard[]>) {
+function getPlayer(id: string, board: Board) {
   const players = Array.from(board.keys());
   return players.filter((p) => p.getId() === id)[0];
 }

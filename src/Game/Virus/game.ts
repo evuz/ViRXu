@@ -13,6 +13,7 @@ import { ActionPayloadCurrentPlayer, ActionPayloadPlay } from '../Entities/Actio
 import { VirusCardType } from '../Enums/VirusCardType';
 import { OrganCard, IOrganCard } from '../Entities/OrganCard';
 import { requirementsValidator } from '../Entities/Requirements/Validators';
+import { Board } from '../Entities/Board';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
 
@@ -24,8 +25,8 @@ export function virusGenerator(numberOfPlayers = 4) {
 
   const id = EntitiesId.Game;
   const deck = virusDeck;
-  const board = new Map<Player, OrganCard[]>();
-  const [boardSubject, board$] = createSubject<Map<Player, OrganCard[]>>(() => new ReplaySubject(1));
+  const board: Board = new Map();
+  const [boardSubject, board$] = createSubject<Board>(() => new ReplaySubject(1));
   const [playerSubject, player$] = createSubject<Player>();
   const [startSubject, start$] = createSubject<typeof gameActions$>();
   const [action$, fireAction] = actionableGenerator(id);

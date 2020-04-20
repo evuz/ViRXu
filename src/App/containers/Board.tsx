@@ -6,11 +6,11 @@ import { playerGenerator, Player } from '../../Game/Entities/Player';
 import { BoardPlayer } from '../components/BoardPlayer';
 import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
 import { GameContext } from '../context/Game/GameContext';
-import { OrganCard } from '../../Game/Entities/OrganCard';
 import { ManageSelectionContext, SelectionPlace } from '../context/ManageSelection/ManageSelectionContext';
 import { Card } from '../../Game/Entities/Card';
 import { Requirement, RequirementApply } from '../../Game/Entities/Requirements';
 import { getSelections } from '../../Utils/getSelections';
+import { Board as IBoard } from '../../Game/Entities/Board';
 
 type BoardProps = {
   onPlayerReady(player: Player): void;
@@ -22,7 +22,7 @@ export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
   const { selectionRequirements } = useContext(ManageSelectionContext);
 
   const [cardsSelected, setCardsSelected] = useState<Map<Card, boolean>>(new Map());
-  const [board, setBoard] = useState(new Map<Player, OrganCard[]>());
+  const [board, setBoard] = useState<IBoard>(new Map());
   const [players] = useState([
     playerGenerator({ id: '1', name: 'Player 1' }),
     playerGenerator({ id: '2', name: 'Player 2' }),
