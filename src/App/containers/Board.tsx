@@ -45,6 +45,10 @@ export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
   }, [game]);
 
   useEffect(() => {
+    setCardsSelected(new Map());
+  }, [currentPlayer]);
+
+  useEffect(() => {
     if (!boardSelectable) {
       return;
     }
@@ -56,7 +60,7 @@ export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
     if (selections.length === requirements.length) {
       currentPlayer.play(selectionRequirements.card, getSelections(cardsSelected));
     }
-  }, [boardSelectable, cardsSelected, currentPlayer, selectionRequirements.card]);
+  }, [boardSelectable, cardsSelected, selectionRequirements.card]); // eslint-disable-line
 
   function selectCard(card) {
     if (!boardSelectable) {

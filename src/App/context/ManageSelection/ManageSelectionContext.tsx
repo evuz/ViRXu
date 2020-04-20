@@ -1,4 +1,4 @@
-import React, { createContext, useState, useCallback } from 'react';
+import React, { createContext, useState } from 'react';
 import { Card } from '../../../Game/Entities/Card';
 
 export const enum SelectionPlace {

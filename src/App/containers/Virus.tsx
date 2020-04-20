@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
-import { switchMap, filter, tap } from 'rxjs/operators';
+import { switchMap, filter } from 'rxjs/operators';
 
 import { virusGenerator } from '../../Game/Virus/game';
 import { Player } from '../../Game/Entities/Player';
@@ -10,9 +10,11 @@ import { ActionsPayloadType } from '../../Game/Enums/ActionsPayloadType';
 import { Action } from '../../Game/Entities/Action';
 import { ActionPayloadError } from '../../Game/Entities/ActionPayload';
 import { ManageSelectionContext, SelectionPlace } from '../context/ManageSelection/ManageSelectionContext';
+import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
 
 export const Virus = () => {
   const { setContextGame } = useContext(GameContext);
+  const currentPlayer = useContext(CurrentPlayerContext);
   const { setSelectionRequirements } = useContext(ManageSelectionContext);
 
   const [game] = useState(virusGenerator());
@@ -25,13 +27,20 @@ export const Virus = () => {
   );
 
   useEffect(() => {
+    setSelectionRequirements({ place: SelectionPlace.Hand });
+  }, [currentPlayer, setSelectionRequirements]);
+
+  useEffect(() => {
+    setContextGame(game);
+  }, [game, setContextGame]);
+
+  useEffect(() => {
     setContextGame(game);
   }, [game, setContextGame]);
 
   useEffect(() => {
     const subscription = game?.start$
       .pipe(
-        tap(() => setSelectionRequirements({ place: SelectionPlace.Hand })),
         switchMap((actions$) => actions$),
         filter(({ payload }) => payload.action === ActionsPayloadType.Error),
       )

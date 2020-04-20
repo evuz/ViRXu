@@ -12,8 +12,9 @@ type CardPlayedProps = {
 export const OrganCard: FC<CardPlayedProps> = ({ card: cardPlayed, selectable = false, onClick = () => {} }) => {
   const organ = cardPlayed.organ;
   return (
-    <button onClick={() => onClick(cardPlayed)} disabled={!selectable}>
+    <button onClick={() => onClick(cardPlayed.organ)} disabled={!selectable}>
       <Card selectable={selectable} card={organ} />
+      {cardPlayed.cards?.map((card) => card.name)}
     </button>
   );
 };

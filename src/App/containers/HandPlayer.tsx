@@ -24,6 +24,10 @@ export const HandPlayer: FC<HandPlayerProps> = () => {
     () => subscription?.unsubscribe();
   }, [player]);
 
+  useEffect(() => {
+    setCardsSelected(new Map());
+  }, [player]);
+
   if (!player) {
     return null;
   }
@@ -76,14 +80,13 @@ export const HandPlayer: FC<HandPlayerProps> = () => {
     }
 
     player.play(card);
-    setCardsSelected(new Map());
   }
 
   return (
     <div className={classNames}>
       <div className="HandPlayer__name">{player.getName()}</div>
       <div className="HandPlayer__cards">
-        {cards.map((card, index) => (
+        {cards.map((card) => (
           <button onClick={() => selectCard(card)} key={card.id}>
             <Card card={card} selected={cardsSelected.get(card)} />
           </button>
