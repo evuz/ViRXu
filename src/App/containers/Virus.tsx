@@ -45,6 +45,7 @@ export const Virus = () => {
         payload.errors.forEach((error) => {
           console.error(error.message);
         });
+        setSelectionRequirements({ place: SelectionPlace.Hand });
       });
     () => subscription?.unsubscribe();
   }, [game, setSelectionRequirements]);
