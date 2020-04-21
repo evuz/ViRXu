@@ -23,7 +23,7 @@ function organsRequirement(color: VirusCardColor) {
 
 export interface Organ extends Card {}
 export class Organ extends Entity<Card> {
-  action(action: Action, board: Board): Board {
+  action(action: Action, board: Board) {
     const payload = <ActionPayloadPlay>action.payload;
     const player = getPlayer(<string>action.from, board);
     const playerBoard = board.get(player);
@@ -32,7 +32,7 @@ export class Organ extends Entity<Card> {
       player,
       playerBoard.concat([{ cards: [], organ: <IOrganCard>this, state: OrganCard.calculateState(payload.cards) }]),
     );
-    return board;
+    return { board };
   }
 }
 

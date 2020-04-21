@@ -31,7 +31,7 @@ export function dealerGenerator(deck: Deck) {
     shuffle();
 
     gameActions$.pipe(filter(({ payload }) => payload.action === ActionsPayloadType.Discard)).subscribe((action) => {
-      stack = stack.concat((<ActionPayloadDiscard>action.payload).cards);
+      toStack((<ActionPayloadDiscard>action.payload).cards);
       actionDrawCards(action);
     });
     allActions$.pipe(filter((action) => action.payload.action === ActionsPayloadType.Start)).subscribe(initialDraw);
@@ -89,11 +89,16 @@ export function dealerGenerator(deck: Deck) {
     return cards.splice(-n);
   }
 
+  function toStack(cards: Card[] = []) {
+    stack = stack.concat(cards);
+  }
+
   const actions = {
     action$,
     start,
     shuffle,
     restart,
+    toStack,
   };
 
   return actions;

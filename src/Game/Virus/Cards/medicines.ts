@@ -11,21 +11,22 @@ import { getPlayer } from '../../../Utils/getPlayer';
 import { ActionPayloadPlay } from '../../Entities/ActionPayload';
 import { OrganCard } from '../../Entities/OrganCard';
 
-function medicineRequirement(color: VirusCardColor) {
+function medicineRequirement(color: VirusCardColor[]) {
   return [
     requirement(RequirementApply.Selection)
       .to(RequirementType.CardUser)
       .cards(1)
       .type([VirusCardType.Organ])
       .state([OrganCardState.Free, OrganCardState.Infect, OrganCardState.Vaccinate])
-      .color([color])
+      .color(color)
       .execute(),
   ];
 }
 
 export interface Medicine extends Card {}
 export class Medicine extends Entity<Card> {
-  action(action: Action, board: Board): Board {
+  action(action: Action, board: Board) {
+    const discard: Card[] = [];
     const payload = <ActionPayloadPlay>action.payload;
     const player = getPlayer(<string>action.from, board);
     const playerBoard = board.get(player);
@@ -37,9 +38,20 @@ export class Medicine extends Entity<Card> {
     const requirement = payload.requirements[0];
 
     const organ = playerBoard.find((cards) => cards.organ.id === requirement.id);
-    organ.cards.push(this);
+    switch (organ.state) {
+      case OrganCardState.Free:
+      case OrganCardState.Vaccinate:
+        organ.cards.push(this);
+        break;
+      case OrganCardState.Infect:
+        discard.push(organ.cards.pop());
+        discard.push(this);
+        break;
+      default:
+        throw Error('Invalid state');
+    }
     organ.state = OrganCard.calculateState(organ.cards);
-    return board;
+    return { board, discard };
   }
 }
 
@@ -61,7 +73,7 @@ export const vaccine: CardGenerator = () => {
     name: 'Vaccine',
     type: VirusCardType.Medicine,
     color: VirusCardColor.Red,
-    requirements: medicineRequirement(VirusCardColor.Red),
+    requirements: medicineRequirement([VirusCardColor.Red]),
   });
 };
 
@@ -72,7 +84,7 @@ export const syrup: CardGenerator = () => {
     name: 'Syrup',
     type: VirusCardType.Medicine,
     color: VirusCardColor.Green,
-    requirements: medicineRequirement(VirusCardColor.Green),
+    requirements: medicineRequirement([VirusCardColor.Green]),
   });
 };
 
@@ -83,7 +95,7 @@ export const pill: CardGenerator = () => {
     name: 'Pill',
     type: VirusCardType.Medicine,
     color: VirusCardColor.Blue,
-    requirements: medicineRequirement(VirusCardColor.Blue),
+    requirements: medicineRequirement([VirusCardColor.Blue]),
   });
 };
 
@@ -94,6 +106,6 @@ export const plaster: CardGenerator = () => {
     name: 'Plaster',
     type: VirusCardType.Medicine,
     color: VirusCardColor.Yellow,
-    requirements: medicineRequirement(VirusCardColor.Yellow),
+    requirements: medicineRequirement([VirusCardColor.Yellow]),
   });
 };

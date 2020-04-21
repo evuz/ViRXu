@@ -106,14 +106,12 @@ export function virusGenerator(numberOfPlayers = 4) {
           });
         }
 
-        console.log(action);
-
         if (card.action) {
-          board = new Map(card.action(action, board).entries());
+          const { board: b, discard } = card.action(action, board);
+          board = new Map(b.entries());
           boardSubject.next(board);
+          dealer.toStack(discard);
         }
-
-        console.log(board);
 
         fireAction(EntitiesId.All, {
           action: ActionsPayloadType.CurrentPlayer,

@@ -35,10 +35,6 @@ export const Virus = () => {
   }, [game, setContextGame]);
 
   useEffect(() => {
-    setContextGame(game);
-  }, [game, setContextGame]);
-
-  useEffect(() => {
     const subscription = game?.start$
       .pipe(
         switchMap((actions$) => actions$),

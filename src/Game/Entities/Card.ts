@@ -11,7 +11,7 @@ export type Card = {
   type: VirusCardType;
   color: VirusCardColor;
   requirements?: Requirement[];
-  action?(action: Action, board: Board): Board;
+  action?(action: Action, board: Board): { board: Board; discard?: Card[] };
 };
 
 export type CardGenerator = () => Card;
