@@ -15,11 +15,11 @@ import {
   syrup,
   pill,
   plaster,
-  infection,
-  organThief,
-  transplant,
-  latexGlove,
-  medicalError,
+  // infection,
+  // organThief,
+  // transplant,
+  // latexGlove,
+  // medicalError,
 } from './Cards';
 
 export const virusDeck: Deck = deckGenerator([
@@ -38,9 +38,9 @@ export const virusDeck: Deck = deckGenerator([
   { card: syrup, quantity: 4 },
   { card: pill, quantity: 4 },
   { card: plaster, quantity: 4 },
-  { card: infection, quantity: 2 },
-  { card: organThief, quantity: 3 },
-  { card: transplant, quantity: 3 },
-  { card: latexGlove, quantity: 1 },
-  { card: medicalError, quantity: 1 },
+  // { card: infection, quantity: 2 },
+  // { card: organThief, quantity: 3 },
+  // { card: transplant, quantity: 3 },
+  // { card: latexGlove, quantity: 1 },
+  // { card: medicalError, quantity: 1 },
 ]);
