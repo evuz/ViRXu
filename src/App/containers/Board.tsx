@@ -46,7 +46,7 @@ export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
 
   useEffect(() => {
     setCardsSelected(new Map());
-  }, [currentPlayer]);
+  }, [currentPlayer, boardSelectable]);
 
   useEffect(() => {
     if (!boardSelectable) {
