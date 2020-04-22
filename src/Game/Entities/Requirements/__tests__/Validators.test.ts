@@ -2,8 +2,14 @@ import { ActionsPayloadType } from '../../../Enums/ActionsPayloadType';
 import { EntitiesId } from '../../../Enums/EntitiesId';
 import { VirusCardType } from '../../../Enums/VirusCardType';
 import { bone as b, brain as br, heart as h, liver as l, multiOrgan as mo } from '../../../Virus/Cards/organs';
-import { pill as p } from '../../../Virus/Cards/medicines';
-import { redVirus as rv } from '../../../Virus/Cards/virus';
+import { pill as p, kit as fak, plaster as pl, syrup as s, vaccine as v } from '../../../Virus/Cards/medicines';
+import {
+  redVirus as rv,
+  multiVirus as mv,
+  yellowVirus as yv,
+  blueVirus as bv,
+  greenVirus as gv,
+} from '../../../Virus/Cards/virus';
 import { Action } from '../../Action';
 import { ActionPayloadPlay } from '../../ActionPayload';
 import { Card } from '../../Card';
@@ -56,6 +62,14 @@ describe('RequirementsValidator', () => {
   let multiOrgan: Card;
   let pill: Card;
   let redVirus: Card;
+  let kit: Card;
+  let multiVirus: Card;
+  let plaster: Card;
+  let syrup: Card;
+  let vaccine: Card;
+  let yellowVirus: Card;
+  let blueVirus: Card;
+  let greenVirus: Card;
 
   beforeEach(() => {
     bone = b();
@@ -65,6 +79,14 @@ describe('RequirementsValidator', () => {
     multiOrgan = mo();
     pill = p();
     redVirus = rv();
+    kit = fak();
+    multiVirus = mv();
+    plaster = pl();
+    syrup = s();
+    vaccine = v();
+    yellowVirus = yv();
+    blueVirus = bv();
+    greenVirus = gv();
   });
 
   test("should return null if cards haven't requirements", () => {
@@ -497,6 +519,61 @@ describe('RequirementsValidator', () => {
         );
         expect(validation).not.toBeNull();
         expect(validation.map((v) => v.message)).toContain('Selection not allowed');
+      });
+    });
+
+    describe('cards multi colors', () => {
+      test('first aid kit should return valid with all organs', () => {
+        const [board, players] = createBoard([[[brain], [heart], [liver], [bone]]]);
+        board.get(players[0]).forEach((card) => {
+          const validation = requirementsValidator(
+            createAction(players[0].getId(), {
+              cards: [kit],
+              requirements: [card.organ],
+            }),
+            board,
+          );
+          expect(validation).toBeNull();
+        });
+      });
+
+      test('multi virus should return valid with all organs', () => {
+        const [board, players] = createBoard([[], [[brain], [liver], [heart], [bone]]]);
+        board.get(players[1]).forEach((card) => {
+          const validation = requirementsValidator(
+            createAction(players[0].getId(), {
+              cards: [multiVirus],
+              requirements: [card.organ],
+            }),
+            board,
+          );
+          expect(validation).toBeNull();
+        });
+      });
+
+      test('multi organ return valid with all medicine and virus', () => {
+        const [board, players] = createBoard([[[multiOrgan]], [[mo()]]]);
+        [plaster, syrup, vaccine, pill, kit].forEach((medicine) => {
+          const validation = requirementsValidator(
+            createAction(players[0].getId(), {
+              cards: [medicine],
+              requirements: [board.get(players[0])[0].organ],
+            }),
+            board,
+          );
+          expect(validation).toBeNull();
+        });
+
+        [yellowVirus, greenVirus, redVirus, blueVirus, multiVirus].forEach((medicine) => {
+          const validation = requirementsValidator(
+            createAction(players[0].getId(), {
+              cards: [medicine],
+              requirements: [board.get(players[1])[0].organ],
+            }),
+            board,
+          );
+          expect(validation).toBeNull();
+        });
       });
     });
   });

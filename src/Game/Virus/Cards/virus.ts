@@ -18,7 +18,7 @@ function virusRequirement(color: VirusCardColor[]) {
       .cards(1)
       .type([VirusCardType.Organ])
       .state([OrganCardState.Free, OrganCardState.Infect, OrganCardState.Vaccinate])
-      .color(color)
+      .color(color ? [VirusCardColor.Multi].concat(color) : null)
       .execute(),
   ];
 }
