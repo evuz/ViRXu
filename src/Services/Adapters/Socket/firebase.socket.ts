@@ -22,7 +22,7 @@ export function firebaseSocket(config): SocketAdapter {
 
     const ref = getRef(entity, element);
 
-    return ref.set(value).then(() => value);
+    return ref.set(value).then(() => Object.assign({}, value, { id: ref.key }));
   }
 
   function getRef(entity: string, element: string) {
