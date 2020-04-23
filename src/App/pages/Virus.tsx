@@ -3,8 +3,8 @@ import { switchMap, filter } from 'rxjs/operators';
 
 import { virusGenerator } from '../../Game/Virus/game';
 import { Player } from '../../Game/Entities/Player';
-import { Board } from './Board';
-import { HandPlayer } from './HandPlayer';
+import { Board } from '../containers/Board';
+import { HandPlayer } from '../containers/HandPlayer';
 import { GameContext } from '../context/Game/GameContext';
 import { ActionsPayloadType } from '../../Game/Enums/ActionsPayloadType';
 import { Action } from '../../Game/Entities/Action';
@@ -12,12 +12,13 @@ import { ActionPayloadError } from '../../Game/Entities/ActionPayload';
 import { ManageSelectionContext, SelectionPlace } from '../context/ManageSelection/ManageSelectionContext';
 import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
 
-export const Virus = () => {
+export const Virus = ({ params }) => {
   const { setContextGame } = useContext(GameContext);
   const currentPlayer = useContext(CurrentPlayerContext);
   const { setSelectionRequirements } = useContext(ManageSelectionContext);
-
   const [game] = useState(virusGenerator());
+
+  console.log(params);
 
   const playerReady = useCallback(
     (player: Player) => {

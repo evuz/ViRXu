@@ -6,9 +6,11 @@
 @import './utils/functions';
 @import './variables';
 
+// Pages
+@import './pages/Virus';
+
 // Components
 @import './components/App';
-@import './components/Virus';
 @import './components/Card';
 @import './components/Button';
 @import './components/Board';
