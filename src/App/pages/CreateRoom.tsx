@@ -8,13 +8,12 @@ import { copyUrlToClipboard } from '../../Utils/copyUrlToClipboard';
 export const CreateRoom: FC<RouteComponentProps> = ({ params }) => {
   const [loc, setLocation] = useLocation();
   const { roomId } = params;
-  console.log(loc);
+
   function click() {
     domain
       .get('createRoom')
       .execute({ name: 'New Room' })
       .then((room) => {
-        console.log(room);
         setLocation(`${loc}/${room.id}`);
       });
   }

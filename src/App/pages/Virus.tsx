@@ -18,14 +18,16 @@ export const Virus = ({ params }) => {
   const { setSelectionRequirements } = useContext(ManageSelectionContext);
   const [game] = useState(virusGenerator());
 
-  console.log(params);
-
   const playerReady = useCallback(
     (player: Player) => {
       game.addPlayer(player);
     },
     [game],
   );
+
+  useEffect(() => {
+    console.log(params);
+  }, [params]);
 
   useEffect(() => {
     setSelectionRequirements({ place: SelectionPlace.Hand });
