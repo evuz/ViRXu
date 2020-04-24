@@ -31,7 +31,7 @@ export function virusGenerator(numberOfPlayers = 4) {
   const ready$ = player$.pipe(
     tap((player) => {
       players = players.concat([player]);
-      board.set(player, []);
+      board.set(player.getId(), []);
     }),
     scan((acc) => acc + 1, 0),
     filter((players) => players >= numberOfPlayers),

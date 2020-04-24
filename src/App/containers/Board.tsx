@@ -20,10 +20,10 @@ let _players: Player[];
 function playersGen() {
   if (!_players) {
     _players = [
-      playerGenerator({ id: '1', name: 'Player 1' }),
-      playerGenerator({ id: '2', name: 'Player 2' }),
-      playerGenerator({ id: '3', name: 'Player 3' }),
-      playerGenerator({ id: '4', name: 'Player 4' }),
+      playerGenerator({ name: 'Player 1' }),
+      playerGenerator({ name: 'Player 2' }),
+      playerGenerator({ name: 'Player 3' }),
+      playerGenerator({ name: 'Player 4' }),
     ];
   }
   return _players;
@@ -89,7 +89,7 @@ export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
           onSelectCard={selectCard}
           selectable={boardSelectable}
           key={player.getId()}
-          board={board.get(player)}
+          board={board.get(player.getId())}
           active={currentPlayer?.getId() === player.getId()}
           player={player}
         />

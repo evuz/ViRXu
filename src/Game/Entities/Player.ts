@@ -7,15 +7,16 @@ import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { ActionPayloadDraw, ActionPayloadPlay } from './ActionPayload';
 import { actionableGenerator } from '../../Utils/actionable';
+import { uid } from '../../Utils/uid';
 
 export type PlayerItem = {
-  id: string;
+  id?: string;
   name: string;
 };
 
 export type Player = ReturnType<typeof playerGenerator>;
 
-export function playerGenerator({ id, name }: PlayerItem) {
+export function playerGenerator({ id = uid(6), name }: PlayerItem) {
   let hand: Card[] = [];
 
   const [handSubject, hand$] = createSubject<Card[]>(() => new ReplaySubject<Card[]>(1));
