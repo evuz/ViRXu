@@ -1,12 +1,12 @@
-import { Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { Deck } from './Deck';
-import { actionableGenerator, Action } from './Action';
+import { Action } from './Action';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionPayloadStart, ActionPayloadDiscard, ActionPayloadPlay } from './ActionPayload';
 import { Card } from './Card';
+import { actionableGenerator } from '../../Utils/actionable';
 
 export type Dealer = ReturnType<typeof dealerGenerator>;
 
@@ -16,14 +16,14 @@ export function dealerGenerator(deck: Deck) {
 
   const initialCardsByPlayer = 3;
   const id = EntitiesId.Dealer;
-  const [action$, fireAction] = actionableGenerator(id);
+  const [actions$, fireAction] = actionableGenerator(id);
 
   function restart() {
     cards = deck.slice();
     return actions;
   }
 
-  function start(actions$: Observable<Action>) {
+  function start() {
     const gameActions$ = actions$.pipe(filter((action) => action.to === EntitiesId.Game));
     const allActions$ = actions$.pipe(filter((action) => action.to === EntitiesId.All));
     const myActions$ = actions$.pipe(filter((action) => action.to === id));
@@ -94,12 +94,11 @@ export function dealerGenerator(deck: Deck) {
   }
 
   const actions = {
-    action$,
-    start,
     shuffle,
     restart,
     toStack,
   };
 
+  start();
   return actions;
 }

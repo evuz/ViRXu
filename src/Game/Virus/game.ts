@@ -1,17 +1,18 @@
-import { Observable, merge, ReplaySubject } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { scan, filter, tap } from 'rxjs/operators';
 
 import { virusDeck } from './deck';
 import { Player } from '../Entities/Player';
 import { createSubject } from '../../Utils/createSubject';
 import { dealerGenerator, Dealer } from '../Entities/Dealer';
-import { actionableGenerator, Action } from '../Entities/Action';
+import { Action } from '../Entities/Action';
 import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { random } from '../../Utils/random';
 import { ActionPayloadCurrentPlayer, ActionPayloadPlay } from '../Entities/ActionPayload';
 import { requirementsValidator } from '../Entities/Requirements/Validators';
 import { Board } from '../Entities/Board';
+import { actionableGenerator } from '../../Utils/actionable';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
 
@@ -19,7 +20,6 @@ export function virusGenerator(numberOfPlayers = 4) {
   let dealer: Dealer;
   let players: Player[] = [];
   let currentPlayer: Player = null;
-  let gameActions$: Observable<Action>;
   let board: Board = new Map();
 
   const id = EntitiesId.Game;
@@ -27,7 +27,7 @@ export function virusGenerator(numberOfPlayers = 4) {
   const [boardSubject, board$] = createSubject<Board>(() => new ReplaySubject(1));
   const [playerSubject, player$] = createSubject<Player>();
   const [startSubject, start$] = createSubject<typeof gameActions$>();
-  const [action$, fireAction] = actionableGenerator(id);
+  const [gameActions$, fireAction] = actionableGenerator(id);
   const ready$ = player$.pipe(
     tap((player) => {
       players = players.concat([player]);
@@ -38,10 +38,7 @@ export function virusGenerator(numberOfPlayers = 4) {
   );
 
   ready$.subscribe(() => {
-    const playerActions = players.map((player) => player.action$);
-
     dealer = dealerGenerator(deck);
-    gameActions$ = merge(...playerActions.concat([dealer.action$, action$]));
 
     deliverGameActions();
     startListeners();
@@ -53,8 +50,6 @@ export function virusGenerator(numberOfPlayers = 4) {
 
   function deliverGameActions() {
     startSubject.next(gameActions$);
-    players.forEach((player) => player.start(gameActions$));
-    dealer.start(gameActions$);
     boardSubject.next(board);
   }
 

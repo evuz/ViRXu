@@ -1,12 +1,12 @@
-import { Observable, ReplaySubject, zip, of } from 'rxjs';
+import { ReplaySubject, zip, of } from 'rxjs';
 import { filter, switchMap, take, pluck } from 'rxjs/operators';
 
 import { Card } from './Card';
 import { createSubject } from '../../Utils/createSubject';
-import { actionableGenerator, Action } from './Action';
 import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { ActionPayloadDraw, ActionPayloadPlay } from './ActionPayload';
+import { actionableGenerator } from '../../Utils/actionable';
 
 export type PlayerItem = {
   id: string;
@@ -20,7 +20,7 @@ export function playerGenerator({ id, name }: PlayerItem) {
 
   const [handSubject, hand$] = createSubject<Card[]>(() => new ReplaySubject<Card[]>(1));
   const [readySubject, ready$] = createSubject<boolean>();
-  const [action$, fireAction] = actionableGenerator(id);
+  const [actions$, fireAction] = actionableGenerator(id);
 
   // TODO: make hand$ with scan operator
   function addCardsHand(cards: Card[]) {
@@ -41,14 +41,14 @@ export function playerGenerator({ id, name }: PlayerItem) {
     return actions;
   }
 
-  function start(gameActions$: Observable<Action>) {
+  function start() {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const allActions$ = gameActions$.pipe(filter((action) => action.to === EntitiesId.All));
-    const myActions$ = gameActions$.pipe(filter((action) => action.to === id));
-    const playConfirm$ = gameActions$.pipe(
+    const allActions$ = actions$.pipe(filter((action) => action.to === EntitiesId.All));
+    const myActions$ = actions$.pipe(filter((action) => action.to === id));
+    const playConfirm$ = actions$.pipe(
       filter((action) => action.to === EntitiesId.Game && action.from === id),
       filter(({ payload }) => payload.action === ActionsPayloadType.Play),
-      switchMap((action) => zip(gameActions$, of(action)).pipe(take(1))),
+      switchMap((action) => zip(actions$, of(action)).pipe(take(1))),
       filter(([{ payload }]) => payload.action === ActionsPayloadType.CurrentPlayer),
       pluck('1'),
     );
@@ -82,14 +82,14 @@ export function playerGenerator({ id, name }: PlayerItem) {
   const actions = {
     hand$,
     ready$,
-    action$,
     ready,
-    start,
     play,
     discard,
     getId: () => id,
     getName: () => name,
   };
+
+  start();
 
   return actions;
 }

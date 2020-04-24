@@ -16,6 +16,19 @@ type BoardProps = {
   onPlayerReady(player: Player): void;
 };
 
+let _players: Player[];
+function playersGen() {
+  if (!_players) {
+    _players = [
+      playerGenerator({ id: '1', name: 'Player 1' }),
+      playerGenerator({ id: '2', name: 'Player 2' }),
+      playerGenerator({ id: '3', name: 'Player 3' }),
+      playerGenerator({ id: '4', name: 'Player 4' }),
+    ];
+  }
+  return _players;
+}
+
 export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
   const { game } = useContext(GameContext);
   const currentPlayer = useContext(CurrentPlayerContext);
@@ -23,12 +36,7 @@ export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
 
   const [cardsSelected, setCardsSelected] = useState<Map<Card, boolean>>(new Map());
   const [board, setBoard] = useState<IBoard>(new Map());
-  const [players] = useState([
-    playerGenerator({ id: '1', name: 'Player 1' }),
-    playerGenerator({ id: '2', name: 'Player 2' }),
-    playerGenerator({ id: '3', name: 'Player 3' }),
-    playerGenerator({ id: '4', name: 'Player 4' }),
-  ]);
+  const [players] = useState(playersGen);
 
   const boardSelectable = selectionRequirements.place === SelectionPlace.Board;
 
