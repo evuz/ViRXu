@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect, useContext } from 'react';
+import { Redirect, useLocation } from 'wouter';
 import { switchMap, filter } from 'rxjs/operators';
 
 import { virusGenerator } from '../../Game/Virus/game';
@@ -11,12 +12,17 @@ import { Action } from '../../Game/Entities/Action';
 import { ActionPayloadError } from '../../Game/Entities/ActionPayload';
 import { ManageSelectionContext, SelectionPlace } from '../context/ManageSelection/ManageSelectionContext';
 import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
+import { domain } from '../../Services/domain';
+import { Room } from '../../Services/Room/Entities/Room';
 
 export const Virus = ({ params }) => {
   const { setContextGame } = useContext(GameContext);
   const currentPlayer = useContext(CurrentPlayerContext);
   const { setSelectionRequirements } = useContext(ManageSelectionContext);
+  const [, setLocation] = useLocation();
+
   const [game] = useState(virusGenerator());
+  const [room, setRoom] = useState<Room>(null);
 
   const playerReady = useCallback(
     (player: Player) => {
@@ -26,8 +32,16 @@ export const Virus = ({ params }) => {
   );
 
   useEffect(() => {
-    console.log(params);
-  }, [params]);
+    domain
+      .get('getRoom')
+      .execute(params.roomId)
+      .then((room) => {
+        setRoom(room);
+      })
+      .catch(() => {
+        setLocation('/not-found', true);
+      });
+  }, [params, setLocation]);
 
   useEffect(() => {
     setSelectionRequirements({ place: SelectionPlace.Hand });
@@ -52,6 +66,10 @@ export const Virus = ({ params }) => {
       });
     () => subscription?.unsubscribe();
   }, [game, setSelectionRequirements]);
+
+  if (!room) {
+    return 'Loading...';
+  }
 
   return (
     <div className="Virus">
