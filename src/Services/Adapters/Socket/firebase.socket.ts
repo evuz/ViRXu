@@ -1,4 +1,6 @@
 import * as app from 'firebase/app';
+import { take } from 'rxjs/operators';
+import { objectVal } from 'rxfire/database';
 import 'firebase/database';
 
 import { SocketAdapter } from './socket.adapter';
@@ -25,6 +27,26 @@ export function firebaseSocket(config): SocketAdapter {
     return ref.set(value).then(() => Object.assign({}, value, { id: ref.key }));
   }
 
+  function on(element: string): any {
+    const ref = database.ref(element);
+    return objectVal(ref, 'id');
+  }
+
+  function once(element: string): any {
+    return new Promise((resolve, reject) => {
+      on(element)
+        .pipe(take(1))
+        .subscribe({
+          next(value) {
+            resolve(value);
+          },
+          error(err) {
+            reject(err);
+          },
+        });
+    });
+  }
+
   function getRef(entity: string, element: string) {
     if (!element) {
       return database.ref(entity).push();
@@ -33,8 +55,8 @@ export function firebaseSocket(config): SocketAdapter {
   }
 
   return {
-    on: null,
-    once: null,
+    on,
+    once,
     emit,
   };
 }
