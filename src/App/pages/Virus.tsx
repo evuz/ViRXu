@@ -68,7 +68,7 @@ export const Virus = ({ params }) => {
   }, [game, setSelectionRequirements]);
 
   if (!room) {
-    return 'Loading...';
+    return <h1>Loading...</h1>;
   }
 
   return (
