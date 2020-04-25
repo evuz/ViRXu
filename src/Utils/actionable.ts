@@ -1,16 +1,16 @@
 import { Action } from '../Game/Entities/Action';
 import { ActionPayload } from '../Game/Entities/ActionPayload';
-import { actionsManager } from '../Services/Adapters/ActionsManager';
+import { ActionsManagerAdapter } from '../Services/Adapters/ActionsManager/actionsManager.adapter';
 
 export type Actionable = ReturnType<typeof actionableGenerator>;
 
-export function actionableGenerator(from: Action['from']) {
+export function actionableGenerator(manager: ActionsManagerAdapter, from: Action['from']) {
   function fireAction(to: Action['to'], payload: ActionPayload) {
-    actionsManager.fireAction({
+    manager.fireAction({
       to,
       from,
       payload,
     });
   }
-  return [actionsManager.actions$, fireAction] as const;
+  return [manager.actions$, fireAction] as const;
 }

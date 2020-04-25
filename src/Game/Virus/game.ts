@@ -12,7 +12,7 @@ import { random } from '../../Utils/random';
 import { ActionPayloadCurrentPlayer, ActionPayloadPlay } from '../Entities/ActionPayload';
 import { requirementsValidator } from '../Entities/Requirements/Validators';
 import { Board } from '../Entities/Board';
-import { actionableGenerator } from '../../Utils/actionable';
+import { domain } from '../../Services/domain';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
 
@@ -27,7 +27,7 @@ export function virusGenerator(numberOfPlayers = 4) {
   const [boardSubject, board$] = createSubject<Board>(() => new ReplaySubject(1));
   const [playerSubject, player$] = createSubject<Player>();
   const [startSubject, start$] = createSubject<typeof gameActions$>();
-  const [gameActions$, fireAction] = actionableGenerator(id);
+  const [gameActions$, fireAction] = domain.get('createActionable').execute(id);
   const ready$ = player$.pipe(
     tap((player) => {
       players = players.concat([player]);

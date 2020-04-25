@@ -6,7 +6,7 @@ import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionPayloadStart, ActionPayloadDiscard, ActionPayloadPlay } from './ActionPayload';
 import { Card } from './Card';
-import { actionableGenerator } from '../../Utils/actionable';
+import { domain } from '../../Services/domain';
 
 export type Dealer = ReturnType<typeof dealerGenerator>;
 
@@ -16,7 +16,7 @@ export function dealerGenerator(deck: Deck) {
 
   const initialCardsByPlayer = 3;
   const id = EntitiesId.Dealer;
-  const [actions$, fireAction] = actionableGenerator(id);
+  const [actions$, fireAction] = domain.get('createActionable').execute(id);
 
   function restart() {
     cards = deck.slice();

@@ -6,8 +6,8 @@ import { createSubject } from '../../Utils/createSubject';
 import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { ActionPayloadDraw, ActionPayloadPlay } from './ActionPayload';
-import { actionableGenerator } from '../../Utils/actionable';
 import { uid } from '../../Utils/uid';
+import { domain } from '../../Services/domain';
 
 export type PlayerItem = {
   id?: string;
@@ -21,7 +21,7 @@ export function playerGenerator({ id = uid(6), name }: PlayerItem) {
 
   const [handSubject, hand$] = createSubject<Card[]>(() => new ReplaySubject<Card[]>(1));
   const [readySubject, ready$] = createSubject<boolean>();
-  const [actions$, fireAction] = actionableGenerator(id);
+  const [actions$, fireAction] = domain.get('createActionable').execute(id);
 
   // TODO: make hand$ with scan operator
   function addCardsHand(cards: Card[]) {
