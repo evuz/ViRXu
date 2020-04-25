@@ -6,6 +6,10 @@ export function offlineActionManager(): ActionsManagerAdapter {
   const [actionSubject, actions$] = createSubject<Action>();
 
   function fireAction(action: Action) {
+    console.groupCollapsed(`From -> ${action.from}`);
+    console.log(`Action type -> ${action.payload.action}`);
+    console.log(action);
+    console.groupEnd();
     actionSubject.next(action);
   }
 

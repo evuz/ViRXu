@@ -4,16 +4,16 @@ import { Card as ICard } from '../../Game/Entities/Card';
 
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
-import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
 import { ManageSelectionContext, SelectionPlace } from '../context/ManageSelection/ManageSelectionContext';
 import { filterClassNames } from '../../Utils/filterClassNames';
 import { Requirement, RequirementApply } from '../../Game/Entities/Requirements';
 import { getSelections } from '../../Utils/getSelections';
+import { PlayerContext } from '../context/Player/PlayerContext';
 
 type HandPlayerProps = {};
 
 export const HandPlayer: FC<HandPlayerProps> = () => {
-  const player = useContext(CurrentPlayerContext);
+  const player = useContext(PlayerContext);
   const { selectionRequirements, setSelectionRequirements } = useContext(ManageSelectionContext);
 
   const [cards, setCards] = useState<ICard[]>([]);
@@ -84,7 +84,7 @@ export const HandPlayer: FC<HandPlayerProps> = () => {
 
   return (
     <div className={classNames}>
-      <div className="HandPlayer__name">{player.getName()}</div>
+      <div className="HandPlayer__name">{player.name}</div>
       <div className="HandPlayer__cards">
         {cards.map((card) => (
           <button onClick={() => selectCard(card)} key={card.id}>

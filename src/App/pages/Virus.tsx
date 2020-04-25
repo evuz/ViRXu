@@ -1,9 +1,7 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react';
-import { Redirect, useLocation } from 'wouter';
+import React, { useState, useEffect, useContext } from 'react';
+import { useLocation } from 'wouter';
 import { switchMap, filter } from 'rxjs/operators';
 
-import { virusGenerator } from '../../Game/Virus/game';
-import { Player } from '../../Game/Entities/Player';
 import { Board } from '../containers/Board';
 import { HandPlayer } from '../containers/HandPlayer';
 import { GameContext } from '../context/Game/GameContext';
@@ -16,20 +14,12 @@ import { domain } from '../../Services/domain';
 import { Room } from '../../Services/Room/Entities/Room';
 
 export const Virus = ({ params }) => {
-  const { setContextGame } = useContext(GameContext);
+  const { game } = useContext(GameContext);
   const currentPlayer = useContext(CurrentPlayerContext);
   const { setSelectionRequirements } = useContext(ManageSelectionContext);
   const [, setLocation] = useLocation();
 
-  const [game] = useState(virusGenerator());
   const [room, setRoom] = useState<Room>(null);
-
-  const playerReady = useCallback(
-    (player: Player) => {
-      game.addPlayer(player);
-    },
-    [game],
-  );
 
   useEffect(() => {
     domain
@@ -46,10 +36,6 @@ export const Virus = ({ params }) => {
   useEffect(() => {
     setSelectionRequirements({ place: SelectionPlace.Hand });
   }, [currentPlayer, setSelectionRequirements]);
-
-  useEffect(() => {
-    setContextGame(game);
-  }, [game, setContextGame]);
 
   useEffect(() => {
     const subscription = game?.start$
@@ -73,7 +59,7 @@ export const Virus = ({ params }) => {
 
   return (
     <div className="Virus">
-      <Board onPlayerReady={playerReady} />
+      <Board />
       <HandPlayer />
     </div>
   );

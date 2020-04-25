@@ -2,14 +2,14 @@ import { ReplaySubject } from 'rxjs';
 import { scan, filter, tap } from 'rxjs/operators';
 
 import { virusDeck } from './deck';
-import { Player } from '../Entities/Player';
+import { IPlayer } from '../Entities/Player';
 import { createSubject } from '../../Utils/createSubject';
 import { dealerGenerator, Dealer } from '../Entities/Dealer';
 import { Action } from '../Entities/Action';
 import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { random } from '../../Utils/random';
-import { ActionPayloadCurrentPlayer, ActionPayloadPlay } from '../Entities/ActionPayload';
+import { ActionPayloadCurrentPlayer, ActionPayloadPlay, ActionPayloadNewPlayer } from '../Entities/ActionPayload';
 import { requirementsValidator } from '../Entities/Requirements/Validators';
 import { Board } from '../Entities/Board';
 import { domain } from '../../Services/domain';
@@ -18,20 +18,21 @@ export type VirusGame = ReturnType<typeof virusGenerator>;
 
 export function virusGenerator(numberOfPlayers = 4) {
   let dealer: Dealer;
-  let players: Player[] = [];
-  let currentPlayer: Player = null;
+  let players: IPlayer[] = [];
+  let currentPlayer: IPlayer = null;
   let board: Board = new Map();
 
   const id = EntitiesId.Game;
   const deck = virusDeck;
   const [boardSubject, board$] = createSubject<Board>(() => new ReplaySubject(1));
-  const [playerSubject, player$] = createSubject<Player>();
+  const [playerSubject, player$] = createSubject<IPlayer>();
   const [startSubject, start$] = createSubject<typeof gameActions$>();
   const [gameActions$, fireAction] = domain.get('createActionable').execute(id);
+
   const ready$ = player$.pipe(
     tap((player) => {
       players = players.concat([player]);
-      board.set(player.getId(), []);
+      board.set(player.id, []);
     }),
     scan((acc) => acc + 1, 0),
     filter((players) => players >= numberOfPlayers),
@@ -46,6 +47,16 @@ export function virusGenerator(numberOfPlayers = 4) {
       action: ActionsPayloadType.Start,
       players: players,
     });
+  });
+
+  const newPlayer$ = gameActions$.pipe(
+    filter((action) => action.to === id),
+    filter(({ payload }) => payload.action === ActionsPayloadType.NewPlayer),
+  );
+
+  newPlayer$.subscribe((action) => {
+    const payload = <ActionPayloadNewPlayer>action.payload;
+    playerSubject.next(payload.player);
   });
 
   function deliverGameActions() {
@@ -115,11 +126,6 @@ export function virusGenerator(numberOfPlayers = 4) {
       });
   }
 
-  function addPlayer(player: Player) {
-    playerSubject.next(player);
-    return actions;
-  }
-
   function nextPlayer() {
     const currentIndex = players.indexOf(currentPlayer);
     const newIndex = players[currentIndex + 1] ? currentIndex + 1 : 0;
@@ -129,7 +135,6 @@ export function virusGenerator(numberOfPlayers = 4) {
   const actions = {
     start$,
     board$,
-    addPlayer,
   };
 
   return actions;

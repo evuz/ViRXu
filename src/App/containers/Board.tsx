@@ -1,8 +1,6 @@
 import React, { useState, FC, useEffect, useContext } from 'react';
 import { Subscription } from 'rxjs';
 
-import { playerGenerator, Player } from '../../Game/Entities/Player';
-
 import { BoardPlayer } from '../components/BoardPlayer';
 import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
 import { GameContext } from '../context/Game/GameContext';
@@ -11,39 +9,37 @@ import { Card } from '../../Game/Entities/Card';
 import { Requirement, RequirementApply } from '../../Game/Entities/Requirements';
 import { getSelections } from '../../Utils/getSelections';
 import { Board as IBoard } from '../../Game/Entities/Board';
+import { PlayerContext } from '../context/Player/PlayerContext';
+import { IPlayer } from '../../Game/Entities/Player';
+import { domain } from '../../Services/domain';
+import { filter } from 'rxjs/operators';
+import { ActionsPayloadType } from '../../Game/Enums/ActionsPayloadType';
+import { ActionPayloadNewPlayer } from '../../Game/Entities/ActionPayload';
 
-type BoardProps = {
-  onPlayerReady(player: Player): void;
-};
+type BoardProps = {};
 
-let _players: Player[];
-function playersGen() {
-  if (!_players) {
-    _players = [
-      playerGenerator({ name: 'Player 1' }),
-      playerGenerator({ name: 'Player 2' }),
-      playerGenerator({ name: 'Player 3' }),
-      playerGenerator({ name: 'Player 4' }),
-    ];
-  }
-  return _players;
-}
-
-export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
+export const Board: FC<BoardProps> = () => {
   const { game } = useContext(GameContext);
-  const currentPlayer = useContext(CurrentPlayerContext);
   const { selectionRequirements } = useContext(ManageSelectionContext);
+  const currentPlayer = useContext(CurrentPlayerContext);
+  const player = useContext(PlayerContext);
 
   const [cardsSelected, setCardsSelected] = useState<Map<Card, boolean>>(new Map());
   const [board, setBoard] = useState<IBoard>(new Map());
-  const [players] = useState(playersGen);
+  const [players, setPlayers] = useState<IPlayer[]>([]);
 
   const boardSelectable = selectionRequirements.place === SelectionPlace.Board;
 
   useEffect(() => {
-    const subscriptions: Subscription[] = players.map((player) => player.ready$.subscribe(() => onPlayerReady(player)));
-    () => subscriptions.forEach((subscription) => subscription.unsubscribe());
-  }, [onPlayerReady, players]);
+    const subscription: Subscription = domain
+      .adapter('actionsManager')
+      .actions$.pipe(filter(({ payload }) => payload.action === ActionsPayloadType.NewPlayer))
+      .subscribe((action) => {
+        const payload = action.payload as ActionPayloadNewPlayer;
+        setPlayers((p) => p.concat(payload.player));
+      });
+    () => subscription?.unsubscribe();
+  }, []);
 
   useEffect(() => {
     const subscription: Subscription = game?.board$.subscribe((b) => {
@@ -57,7 +53,7 @@ export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
   }, [currentPlayer, boardSelectable]);
 
   useEffect(() => {
-    if (!boardSelectable) {
+    if (!boardSelectable || currentPlayer.id !== player.id) {
       return;
     }
     const selections = getSelections(cardsSelected);
@@ -66,7 +62,7 @@ export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
     );
 
     if (selections.length === requirements.length) {
-      currentPlayer.play(selectionRequirements.card, getSelections(cardsSelected));
+      player.play(selectionRequirements.card, getSelections(cardsSelected));
     }
   }, [boardSelectable, cardsSelected, selectionRequirements.card]); // eslint-disable-line
 
@@ -88,9 +84,9 @@ export const Board: FC<BoardProps> = ({ onPlayerReady }) => {
         <BoardPlayer
           onSelectCard={selectCard}
           selectable={boardSelectable}
-          key={player.getId()}
-          board={board.get(player.getId())}
-          active={currentPlayer?.getId() === player.getId()}
+          key={player.id}
+          board={board.get(player.id)}
+          active={currentPlayer?.id === player.id}
           player={player}
         />
       ))}

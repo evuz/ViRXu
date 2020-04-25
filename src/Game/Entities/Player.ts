@@ -9,18 +9,22 @@ import { ActionPayloadDraw, ActionPayloadPlay } from './ActionPayload';
 import { uid } from '../../Utils/uid';
 import { domain } from '../../Services/domain';
 
-export type PlayerItem = {
-  id?: string;
+export type IPlayer = {
+  id: string;
   name: string;
 };
 
 export type Player = ReturnType<typeof playerGenerator>;
 
+export type PlayerItem = {
+  id?: IPlayer['id'];
+  name: IPlayer['name'];
+};
+
 export function playerGenerator({ id = uid(6), name }: PlayerItem) {
   let hand: Card[] = [];
 
   const [handSubject, hand$] = createSubject<Card[]>(() => new ReplaySubject<Card[]>(1));
-  const [readySubject, ready$] = createSubject<boolean>();
   const [actions$, fireAction] = domain.get('createActionable').execute(id);
 
   // TODO: make hand$ with scan operator
@@ -37,8 +41,8 @@ export function playerGenerator({ id = uid(6), name }: PlayerItem) {
     return actions;
   }
 
-  function ready(isReady = true) {
-    readySubject.next(isReady);
+  function ready() {
+    fireAction(EntitiesId.Game, { action: ActionsPayloadType.NewPlayer, player: { id, name } });
     return actions;
   }
 
@@ -82,12 +86,11 @@ export function playerGenerator({ id = uid(6), name }: PlayerItem) {
 
   const actions = {
     hand$,
-    ready$,
     ready,
     play,
     discard,
-    getId: () => id,
-    getName: () => name,
+    id,
+    name,
   };
 
   start();

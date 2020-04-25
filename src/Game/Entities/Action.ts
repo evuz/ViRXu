@@ -3,7 +3,7 @@ import { ActionPayload } from './ActionPayload';
 import { EntitiesId } from '../Enums/EntitiesId';
 
 export type Action<T = ActionPayload> = {
-  to: ReturnType<Player['getId']> | EntitiesId;
-  from: ReturnType<Player['getId']> | EntitiesId;
+  to: Player['id'] | EntitiesId;
+  from: Player['id'] | EntitiesId;
   payload: T;
 };

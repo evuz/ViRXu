@@ -22,5 +22,10 @@ export function domainFactory() {
     listenActions: listenActions(socket),
   };
 
-  return createDomain(useCases, config);
+  const adapters = {
+    socket,
+    actionsManager,
+  };
+
+  return createDomain({ useCases, config, adapters });
 }

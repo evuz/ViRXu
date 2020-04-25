@@ -51,7 +51,7 @@ export function dealerGenerator(deck: Deck) {
     const cardsByPlayer: { [e: string]: Card[] } = {};
     Array.from({ length: initialCardsByPlayer }).forEach(() => {
       payload.players.forEach((player) => {
-        const playerId = player.getId();
+        const playerId = player.id;
         if (!cardsByPlayer[playerId]) {
           cardsByPlayer[playerId] = [];
         }

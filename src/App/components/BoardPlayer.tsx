@@ -1,13 +1,12 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC } from 'react';
 
-import { Button } from './Button';
 import { OrganCard as OrganCardComponent } from './OrganCard';
-import { Player } from '../../Game/Entities/Player';
+import { IPlayer } from '../../Game/Entities/Player';
 import { filterClassNames } from '../../Utils/filterClassNames';
 import { OrganCard } from '../../Game/Entities/OrganCard';
 
 type BoardPlayer = {
-  player: Player;
+  player: IPlayer;
   board: OrganCard[];
   onSelectCard: Function;
   selectable?: boolean;
@@ -15,21 +14,14 @@ type BoardPlayer = {
 };
 
 export const BoardPlayer: FC<BoardPlayer> = ({ player, board, selectable = false, active = false, onSelectCard }) => {
-  const [isReady, setIsReady] = useState(false);
   const classNames = filterClassNames({
     BoardPlayer: true,
     'BoardPlayer--active': active,
   });
 
-  useEffect(() => {
-    const subscription = player.ready$.subscribe(() => setIsReady(true));
-    () => subscription.unsubscribe();
-  }, [player.ready$]);
-
   return (
     <div className={classNames}>
-      {player.getName()}
-      {!isReady ? <Button onClick={() => player.ready(true)}>Ready!</Button> : null}
+      {player.name}
       <div className="BoardPlayer__cards">
         {board
           ? board.map((cards, index) => (
