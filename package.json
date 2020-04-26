@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "parcel ./src/index.html --open",
+    "start:offline": "cross-env MODE=offline parcel ./src/index.html --open",
     "build": "rimraf dist && parcel build ./src/index.html --no-source-maps",
     "test": "jest --silent",
     "test:dev": "jest --watch",
@@ -28,6 +29,7 @@
     "@types/react-dom": "^16.9.6",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
+    "cross-env": "^7.0.2",
     "cz-conventional-changelog": "^3.1.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.1",
