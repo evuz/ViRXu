@@ -1,6 +1,6 @@
 import * as app from 'firebase/app';
 import { take } from 'rxjs/operators';
-import { objectVal } from 'rxfire/database';
+import { objectVal, listVal } from 'rxfire/database';
 import 'firebase/database';
 
 import { SocketAdapter } from './socket.adapter';
@@ -10,7 +10,12 @@ export function firebaseSocket(config): SocketAdapter {
     apiKey: config.apiKey,
     databaseURL: config.databaseURL,
   });
-  const database = firebase.database();
+
+  // TODO: search another solution to avoid test error
+  let database: app.database.Database;
+  if (process.env.NODE_ENV !== 'test') {
+    database = firebase.database();
+  }
 
   function emit<T>(...args): Promise<T> {
     const entity: string = args[0];
@@ -27,8 +32,13 @@ export function firebaseSocket(config): SocketAdapter {
     return ref.set(value).then(() => Object.assign({}, value, { id: ref.key }));
   }
 
-  function on(element: string): any {
+  function on(element: string, list = false): any {
     const ref = database.ref(element);
+
+    if (list) {
+      return listVal(ref, 'id');
+    }
+
     return objectVal(ref, 'id');
   }
 

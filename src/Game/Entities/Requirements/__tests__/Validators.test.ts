@@ -36,7 +36,7 @@ function createBoard(cardsByPlayer: Card[][][]) {
         state: OrganCard.calculateState(cards),
       };
     });
-    board.set(player, cardsPlayed);
+    board.set(player.id, cardsPlayed);
     return player;
   });
 
@@ -92,7 +92,7 @@ describe('RequirementsValidator', () => {
   test("should return null if cards haven't requirements", () => {
     const [board, players] = createBoard([[[heart], [bone]], [[heart]]]);
     const validation = requirementsValidator(
-      createAction(players[0].getId(), {
+      createAction(players[0].id, {
         cards: [{ ...brain, requirements: null }],
       }),
       board,
@@ -105,7 +105,7 @@ describe('RequirementsValidator', () => {
       test('return valid (color)', () => {
         const [board, players] = createBoard([[[heart], [brain]], [[liver]]]);
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [
               {
                 ...brain,
@@ -127,7 +127,7 @@ describe('RequirementsValidator', () => {
       test('return valid (type & color)', () => {
         const [board, players] = createBoard([[[heart], [brain]], [[brain]]]);
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [
               {
                 ...brain,
@@ -150,7 +150,7 @@ describe('RequirementsValidator', () => {
       test('return error (color)', () => {
         const [board, players] = createBoard([[[heart], [brain]], [[liver]]]);
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [
               {
                 ...brain,
@@ -172,7 +172,7 @@ describe('RequirementsValidator', () => {
       test('return error (type & color)', () => {
         const [board, players] = createBoard([[[heart], [brain]], [[brain]]]);
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [
               {
                 ...brain,
@@ -198,7 +198,7 @@ describe('RequirementsValidator', () => {
     test('brain valid', () => {
       const [board, players] = createBoard([[[heart], [bone], [multiOrgan], [liver]]]);
       const validation = requirementsValidator(
-        createAction(players[0].getId(), {
+        createAction(players[0].id, {
           cards: [brain],
         }),
         board,
@@ -209,7 +209,7 @@ describe('RequirementsValidator', () => {
     test('brain error', () => {
       const [board, players] = createBoard([[[heart], [brain], [multiOrgan], [liver]]]);
       const validation = requirementsValidator(
-        createAction(players[0].getId(), {
+        createAction(players[0].id, {
           cards: [brain],
         }),
         board,
@@ -220,7 +220,7 @@ describe('RequirementsValidator', () => {
     test('heart valid', () => {
       const [board, players] = createBoard([[[brain], [bone], [multiOrgan], [liver]]]);
       const validation = requirementsValidator(
-        createAction(players[0].getId(), {
+        createAction(players[0].id, {
           cards: [heart],
         }),
         board,
@@ -231,7 +231,7 @@ describe('RequirementsValidator', () => {
     test('heart error', () => {
       const [board, players] = createBoard([[[brain], [heart], [multiOrgan], [liver]]]);
       const validation = requirementsValidator(
-        createAction(players[0].getId(), {
+        createAction(players[0].id, {
           cards: [heart],
         }),
         board,
@@ -242,7 +242,7 @@ describe('RequirementsValidator', () => {
     test('heart valid', () => {
       const [board, players] = createBoard([[[brain], [bone], [multiOrgan], [liver]]]);
       const validation = requirementsValidator(
-        createAction(players[0].getId(), {
+        createAction(players[0].id, {
           cards: [heart],
         }),
         board,
@@ -253,7 +253,7 @@ describe('RequirementsValidator', () => {
     test('heart error', () => {
       const [board, players] = createBoard([[[brain], [heart], [multiOrgan], [liver]]]);
       const validation = requirementsValidator(
-        createAction(players[0].getId(), {
+        createAction(players[0].id, {
           cards: [heart],
         }),
         board,
@@ -264,7 +264,7 @@ describe('RequirementsValidator', () => {
     test('bone valid', () => {
       const [board, players] = createBoard([[[brain], [heart], [multiOrgan], [liver]]]);
       const validation = requirementsValidator(
-        createAction(players[0].getId(), {
+        createAction(players[0].id, {
           cards: [bone],
         }),
         board,
@@ -275,7 +275,7 @@ describe('RequirementsValidator', () => {
     test('bone error', () => {
       const [board, players] = createBoard([[[brain], [bone], [multiOrgan], [liver]]]);
       const validation = requirementsValidator(
-        createAction(players[0].getId(), {
+        createAction(players[0].id, {
           cards: [bone],
         }),
         board,
@@ -286,7 +286,7 @@ describe('RequirementsValidator', () => {
     test('liver valid', () => {
       const [board, players] = createBoard([[[brain], [heart], [multiOrgan], [bone]]]);
       const validation = requirementsValidator(
-        createAction(players[0].getId(), {
+        createAction(players[0].id, {
           cards: [liver],
         }),
         board,
@@ -297,7 +297,7 @@ describe('RequirementsValidator', () => {
     test('liver error', () => {
       const [board, players] = createBoard([[[brain], [heart], [multiOrgan], [liver]]]);
       const validation = requirementsValidator(
-        createAction(players[0].getId(), {
+        createAction(players[0].id, {
           cards: [liver],
         }),
         board,
@@ -308,7 +308,7 @@ describe('RequirementsValidator', () => {
     test('multi organ valid', () => {
       const [board, players] = createBoard([[[brain], [heart], [liver], [bone]]]);
       const validation = requirementsValidator(
-        createAction(players[0].getId(), {
+        createAction(players[0].id, {
           cards: [multiOrgan],
         }),
         board,
@@ -319,7 +319,7 @@ describe('RequirementsValidator', () => {
     test('multi organ error', () => {
       const [board, players] = createBoard([[[brain], [heart], [multiOrgan], [bone]]]);
       const validation = requirementsValidator(
-        createAction(players[0].getId(), {
+        createAction(players[0].id, {
           cards: [multiOrgan],
         }),
         board,
@@ -340,9 +340,9 @@ describe('RequirementsValidator', () => {
             .execute(),
         ];
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [pill],
-            requirements: [board.get(players[0])[1].organ],
+            requirements: [board.get(players[0].id)[1].organ],
           }),
           board,
         );
@@ -360,9 +360,9 @@ describe('RequirementsValidator', () => {
             .execute(),
         ];
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [pill],
-            requirements: [board.get(players[0])[1].organ],
+            requirements: [board.get(players[0].id)[1].organ],
           }),
           board,
         );
@@ -371,7 +371,7 @@ describe('RequirementsValidator', () => {
 
       test('should return ok because state is included', () => {
         const [board, players] = createBoard([[[brain], [heart]], [[liver]]]);
-        const heartCard = board.get(players[0])[1];
+        const heartCard = board.get(players[0].id)[1];
         pill.requirements = [
           requirement(RequirementApply.Selection)
             .to(RequirementType.CardUser)
@@ -381,7 +381,7 @@ describe('RequirementsValidator', () => {
         ];
         heartCard.state = OrganCardState.Free;
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [pill],
             requirements: [heartCard.organ],
           }),
@@ -392,7 +392,7 @@ describe('RequirementsValidator', () => {
 
       test('should return error because state is not included', () => {
         const [board, players] = createBoard([[[brain], [heart]], [[liver]]]);
-        const brainCard = board.get(players[0])[0];
+        const brainCard = board.get(players[0].id)[0];
         pill.requirements = [
           requirement(RequirementApply.Selection)
             .to(RequirementType.CardUser)
@@ -402,7 +402,7 @@ describe('RequirementsValidator', () => {
         ];
         brainCard.state = OrganCardState.Immnunise;
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [pill],
             requirements: [brainCard.organ],
           }),
@@ -414,7 +414,7 @@ describe('RequirementsValidator', () => {
 
       test('should no verify state if card selected is not a Organ', () => {
         const [board, players] = createBoard([[[brain], [heart]], [[heart, redVirus, redVirus]]]);
-        const heartCard = board.get(players[1])[0];
+        const heartCard = board.get(players[1].id)[0];
         pill.requirements = [
           requirement(RequirementApply.Selection)
             .to(RequirementType.CardBoard)
@@ -424,7 +424,7 @@ describe('RequirementsValidator', () => {
         ];
         heartCard.state = OrganCardState.Extirpate;
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [pill],
             requirements: [heartCard.cards[0]],
           }),
@@ -435,7 +435,7 @@ describe('RequirementsValidator', () => {
 
       test('should verify state even is null', () => {
         const [board, players] = createBoard([[[brain], [heart]], [[heart, redVirus, redVirus]]]);
-        const heartCard = board.get(players[1])[0];
+        const heartCard = board.get(players[1].id)[0];
         pill.requirements = [
           requirement(RequirementApply.Selection)
             .to(RequirementType.CardBoard)
@@ -445,7 +445,7 @@ describe('RequirementsValidator', () => {
         ];
         heartCard.state = null;
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [pill],
             requirements: [heartCard.organ],
           }),
@@ -467,7 +467,7 @@ describe('RequirementsValidator', () => {
             .execute(),
         ];
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [pill],
             requirements: [multiOrgan],
           }),
@@ -489,9 +489,9 @@ describe('RequirementsValidator', () => {
             .execute(),
         ];
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [pill],
-            requirements: [board.get(players[1])[0].organ],
+            requirements: [board.get(players[1].id)[0].organ],
           }),
           board,
         );
@@ -511,9 +511,9 @@ describe('RequirementsValidator', () => {
             .execute(),
         ];
         const validation = requirementsValidator(
-          createAction(players[0].getId(), {
+          createAction(players[0].id, {
             cards: [pill],
-            requirements: [board.get(players[0])[1].organ],
+            requirements: [board.get(players[0].id)[1].organ],
           }),
           board,
         );
@@ -525,9 +525,9 @@ describe('RequirementsValidator', () => {
     describe('cards multi colors', () => {
       test('first aid kit should return valid with all organs', () => {
         const [board, players] = createBoard([[[brain], [heart], [liver], [bone]]]);
-        board.get(players[0]).forEach((card) => {
+        board.get(players[0].id).forEach((card) => {
           const validation = requirementsValidator(
-            createAction(players[0].getId(), {
+            createAction(players[0].id, {
               cards: [kit],
               requirements: [card.organ],
             }),
@@ -539,9 +539,9 @@ describe('RequirementsValidator', () => {
 
       test('multi virus should return valid with all organs', () => {
         const [board, players] = createBoard([[], [[brain], [liver], [heart], [bone]]]);
-        board.get(players[1]).forEach((card) => {
+        board.get(players[1].id).forEach((card) => {
           const validation = requirementsValidator(
-            createAction(players[0].getId(), {
+            createAction(players[0].id, {
               cards: [multiVirus],
               requirements: [card.organ],
             }),
@@ -555,9 +555,9 @@ describe('RequirementsValidator', () => {
         const [board, players] = createBoard([[[multiOrgan]], [[mo()]]]);
         [plaster, syrup, vaccine, pill, kit].forEach((medicine) => {
           const validation = requirementsValidator(
-            createAction(players[0].getId(), {
+            createAction(players[0].id, {
               cards: [medicine],
-              requirements: [board.get(players[0])[0].organ],
+              requirements: [board.get(players[0].id)[0].organ],
             }),
             board,
           );
@@ -566,9 +566,9 @@ describe('RequirementsValidator', () => {
 
         [yellowVirus, greenVirus, redVirus, blueVirus, multiVirus].forEach((medicine) => {
           const validation = requirementsValidator(
-            createAction(players[0].getId(), {
+            createAction(players[0].id, {
               cards: [medicine],
-              requirements: [board.get(players[1])[0].organ],
+              requirements: [board.get(players[1].id)[0].organ],
             }),
             board,
           );
