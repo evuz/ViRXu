@@ -13,6 +13,7 @@ import { ActionPayloadCurrentPlayer, ActionPayloadPlay, ActionPayloadNewPlayer }
 import { requirementsValidator } from '../Entities/Requirements/Validators';
 import { Board } from '../Entities/Board';
 import { domain } from '../../Services/domain';
+import { deckGenerator } from '../Entities/Deck';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
 
@@ -23,7 +24,7 @@ export function virusGenerator(numberOfPlayers = 4) {
   let board: Board = new Map();
 
   const id = EntitiesId.Game;
-  const deck = virusDeck;
+  const deck = deckGenerator(virusDeck);
   const [boardSubject, board$] = createSubject<Board>(() => new ReplaySubject(1));
   const [playerSubject, player$] = createSubject<IPlayer>();
   const [startSubject, start$] = createSubject<typeof gameActions$>();
@@ -127,7 +128,7 @@ export function virusGenerator(numberOfPlayers = 4) {
   }
 
   function nextPlayer() {
-    const currentIndex = players.indexOf(currentPlayer);
+    const currentIndex = players.findIndex((player) => player.id === currentPlayer.id);
     const newIndex = players[currentIndex + 1] ? currentIndex + 1 : 0;
     return players[newIndex];
   }

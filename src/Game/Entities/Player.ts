@@ -79,7 +79,7 @@ export function playerGenerator({ id = uid(6), name }: PlayerItem) {
     return actions;
   }
 
-  function play(card: Card, requirements?: Card[]) {
+  function play(card: Card, requirements: Card[] = []) {
     fireAction(EntitiesId.Game, { action: ActionsPayloadType.Play, cards: [card], requirements });
     return actions;
   }

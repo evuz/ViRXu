@@ -5,10 +5,11 @@ type DeckItem = {
   quantity: number;
 };
 
+export type DeckCollapsed = { [id: string]: DeckItem };
 export type Deck = Card[];
 
-export function deckGenerator(deck: DeckItem[]): Deck {
-  return deck.reduce((acc, item) => {
+export function deckGenerator(deck: DeckCollapsed): Deck {
+  return Object.values(deck).reduce((acc, item) => {
     return acc.concat(Array.from({ length: item.quantity }).map(() => item.card()));
   }, []);
 }
