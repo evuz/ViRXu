@@ -32,7 +32,7 @@ export function firebaseSocket(config): SocketAdapter {
     return ref.set(value).then(() => Object.assign({}, value, { id: ref.key }));
   }
 
-  function on(element: string, list = false): any {
+  function on(element: string, { list }: any = {}): any {
     const ref = database.ref(element);
 
     if (list) {
