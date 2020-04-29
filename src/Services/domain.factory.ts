@@ -4,7 +4,9 @@ import { createDomain } from './domain.service';
 import { listenActions } from './Room/listenActions.service';
 import { getRoom } from './Room/getRoom';
 import { createActionableService } from './Actions/createActionable.service';
-import { offlineActionManager } from './Adapters/ActionsManager/offline.actionManager';
+import { actionsManager as actionsManagerAdapter } from './Adapters/ActionsManager';
+import { actionsService } from './Actions/actions.service';
+import { createUseCase } from '../Utils/createUseCase';
 
 export function domainFactory() {
   const config = {
@@ -13,9 +15,11 @@ export function domainFactory() {
   };
 
   const socket = firebaseSocket(config);
-  const actionsManager = offlineActionManager();
+  const actionsSrv = actionsService(socket);
+  const actionsManager = actionsManagerAdapter(actionsSrv);
 
   const useCases = {
+    enterRoom: createUseCase(actionsSrv.enterRoom),
     createActionable: createActionableService(actionsManager),
     getRoom: getRoom(socket),
     createRoom: createRoom(socket),

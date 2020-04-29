@@ -36,7 +36,7 @@ export function playerGenerator({ id = uid(6), name }: PlayerItem) {
 
   // TODO: make hand$ with scan operator
   function removeCardsHand(cards: Card[]) {
-    hand = hand.filter((card) => cards.indexOf(card) === -1);
+    hand = hand.filter((card) => !cards.find((c) => c.id === card.id));
     handSubject.next(hand);
     return actions;
   }

@@ -27,10 +27,12 @@ export const Virus = ({ params }) => {
       .execute(params.roomId)
       .then((room) => {
         setRoom(room);
+        domain.get('enterRoom').execute(room.id);
       })
       .catch(() => {
         setLocation('/not-found', true);
       });
+    return () => domain.get('enterRoom').execute(null);
   }, [params, setLocation]);
 
   useEffect(() => {
