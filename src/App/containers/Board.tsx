@@ -38,14 +38,14 @@ export const Board: FC<BoardProps> = () => {
         const payload = action.payload as ActionPayloadNewPlayer;
         setPlayers((p) => p.concat(payload.player));
       });
-    () => subscription?.unsubscribe();
+    return () => subscription?.unsubscribe();
   }, []);
 
   useEffect(() => {
     const subscription: Subscription = game?.board$.subscribe((b) => {
       setBoard(new Map(b.entries()));
     });
-    () => subscription?.unsubscribe();
+    return () => subscription?.unsubscribe();
   }, [game]);
 
   useEffect(() => {

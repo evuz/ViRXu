@@ -43,7 +43,7 @@ export function PlayerState({ children }) {
         const currentPlayer = players.find((p) => p.id === payload.player.id);
         setPlayer(currentPlayer);
       });
-    () => subscription?.unsubscribe();
+    return () => subscription?.unsubscribe();
   }, [game, players]);
 
   return <PlayerContext.Provider value={player}>{children}</PlayerContext.Provider>;

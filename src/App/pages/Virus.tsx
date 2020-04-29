@@ -50,7 +50,7 @@ export const Virus = ({ params }) => {
         });
         setSelectionRequirements({ place: SelectionPlace.Hand });
       });
-    () => subscription?.unsubscribe();
+    return () => subscription?.unsubscribe();
   }, [game, setSelectionRequirements]);
 
   if (!room) {

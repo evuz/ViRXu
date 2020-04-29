@@ -22,7 +22,7 @@ export function CurrentPlayerState({ children }) {
         const payload = action.payload as ActionPayloadCurrentPlayer;
         setCurrentPlayer(payload.player);
       });
-    () => subscription?.unsubscribe();
+    return () => subscription?.unsubscribe();
   }, [game]);
 
   return <CurrentPlayerContext.Provider value={currentPlayer}>{children}</CurrentPlayerContext.Provider>;

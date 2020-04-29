@@ -21,7 +21,7 @@ export const HandPlayer: FC<HandPlayerProps> = () => {
 
   useEffect(() => {
     const subscription = player?.hand$.subscribe((c) => setCards(c));
-    () => subscription?.unsubscribe();
+    return () => subscription?.unsubscribe();
   }, [player]);
 
   useEffect(() => {
