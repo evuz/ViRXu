@@ -33,6 +33,19 @@ export function PlayerState({ children }) {
   }, []); // eslint-disable-line
 
   useEffect(() => {
+    // Choose dealer
+    const subscription = game?.start$
+      .pipe(
+        switchMap((actions$) => actions$),
+        filter(({ payload }) => payload.action === ActionsPayloadType.Start),
+      )
+      .subscribe(() => {
+        game.assignDealer(players[0].id);
+      });
+    return () => subscription?.unsubscribe();
+  }, [game, players]);
+
+  useEffect(() => {
     const subscription = game?.start$
       .pipe(
         switchMap((actions$) => actions$),

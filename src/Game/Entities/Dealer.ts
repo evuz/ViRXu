@@ -4,13 +4,19 @@ import { Deck } from './Deck';
 import { Action } from './Action';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { EntitiesId } from '../Enums/EntitiesId';
-import { ActionPayloadStart, ActionPayloadDiscard, ActionPayloadPlay } from './ActionPayload';
+import { ActionPayloadDiscard, ActionPayloadPlay, ActionPayloadStack } from './ActionPayload';
 import { Card } from './Card';
 import { domain } from '../../Services/domain';
+import { IPlayer } from './Player';
 
 export type Dealer = ReturnType<typeof dealerGenerator>;
 
-export function dealerGenerator(deck: Deck) {
+export type IDealerGenerator = {
+  deck: Deck;
+  players: IPlayer[];
+};
+
+export function dealerGenerator({ deck, players }: IDealerGenerator) {
   let cards = deck.slice();
   let stack = [];
 
@@ -24,8 +30,9 @@ export function dealerGenerator(deck: Deck) {
   }
 
   function start() {
-    const gameActions$ = actions$.pipe(filter((action) => action.to === EntitiesId.Game));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const allActions$ = actions$.pipe(filter((action) => action.to === EntitiesId.All));
+    const gameActions$ = actions$.pipe(filter((action) => action.to === EntitiesId.Game));
     const myActions$ = actions$.pipe(filter((action) => action.to === id));
 
     shuffle();
@@ -34,8 +41,13 @@ export function dealerGenerator(deck: Deck) {
       toStack((<ActionPayloadDiscard>action.payload).cards);
       actionDrawCards(action);
     });
-    allActions$.pipe(filter((action) => action.payload.action === ActionsPayloadType.Start)).subscribe(initialDraw);
     myActions$.pipe(filter((action) => action.payload?.action === ActionsPayloadType.Draw)).subscribe(actionDrawCards);
+    myActions$.pipe(filter((action) => action.payload?.action === ActionsPayloadType.Stack)).subscribe((action) => {
+      const payload = <ActionPayloadStack>action.payload;
+      toStack(payload.cards);
+    });
+
+    initialDraw();
   }
 
   function actionDrawCards(action: Action) {
@@ -46,11 +58,10 @@ export function dealerGenerator(deck: Deck) {
     });
   }
 
-  function initialDraw(action: Action<ActionPayloadStart>) {
-    const payload = action.payload;
+  function initialDraw() {
     const cardsByPlayer: { [e: string]: Card[] } = {};
     Array.from({ length: initialCardsByPlayer }).forEach(() => {
-      payload.players.forEach((player) => {
+      players.forEach((player) => {
         const playerId = player.id;
         if (!cardsByPlayer[playerId]) {
           cardsByPlayer[playerId] = [];
@@ -96,7 +107,6 @@ export function dealerGenerator(deck: Deck) {
   const actions = {
     shuffle,
     restart,
-    toStack,
   };
 
   start();

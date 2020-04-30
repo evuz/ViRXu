@@ -5,9 +5,11 @@ import { Card } from './Card';
 import { createSubject } from '../../Utils/createSubject';
 import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
-import { ActionPayloadDraw, ActionPayloadPlay } from './ActionPayload';
+import { ActionPayloadDraw, ActionPayloadPlay, ActionPayloadAssignDealer } from './ActionPayload';
 import { uid } from '../../Utils/uid';
 import { domain } from '../../Services/domain';
+import { dealerGenerator } from './Dealer';
+import { getDeck } from '../../Utils/getDeck';
 
 export type IPlayer = {
   id: string;
@@ -54,9 +56,16 @@ export function playerGenerator({ id = uid(6), name }: PlayerItem) {
       filter((action) => action.to === EntitiesId.Game && action.from === id),
       filter(({ payload }) => payload.action === ActionsPayloadType.Play),
       switchMap((action) => zip(actions$, of(action)).pipe(take(1))),
-      filter(([{ payload }]) => payload.action === ActionsPayloadType.CurrentPlayer),
+      filter(([{ payload }]) => payload.action !== ActionsPayloadType.Error),
       pluck('1'),
     );
+
+    myActions$
+      .pipe(filter((action) => action.payload.action === ActionsPayloadType.AssignDealer))
+      .subscribe((action) => {
+        const payload = <ActionPayloadAssignDealer>action.payload;
+        dealerGenerator({ deck: getDeck(payload.game), players: payload.players });
+      });
 
     myActions$.pipe(filter((action) => action.payload.action === ActionsPayloadType.Draw)).subscribe((action) => {
       const payload = <ActionPayloadDraw>action.payload;

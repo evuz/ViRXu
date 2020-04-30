@@ -6,4 +6,6 @@ export const enum ActionsPayloadType {
   Discard,
   Play,
   Error,
+  Stack,
+  AssignDealer,
 }

@@ -1,10 +1,8 @@
 import { ReplaySubject } from 'rxjs';
 import { scan, filter, tap } from 'rxjs/operators';
 
-import { virusDeck } from './deck';
-import { IPlayer } from '../Entities/Player';
+import { IPlayer, Player } from '../Entities/Player';
 import { createSubject } from '../../Utils/createSubject';
-import { dealerGenerator, Dealer } from '../Entities/Dealer';
 import { Action } from '../Entities/Action';
 import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
@@ -13,18 +11,17 @@ import { ActionPayloadCurrentPlayer, ActionPayloadPlay, ActionPayloadNewPlayer }
 import { requirementsValidator } from '../Entities/Requirements/Validators';
 import { Board } from '../Entities/Board';
 import { domain } from '../../Services/domain';
-import { deckGenerator } from '../Entities/Deck';
+import { Game } from '../Games';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
 
 export function virusGenerator(numberOfPlayers = 4) {
-  let dealer: Dealer;
   let players: IPlayer[] = [];
   let currentPlayer: IPlayer = null;
   let board: Board = new Map();
 
+  const game = Game.Virus;
   const id = EntitiesId.Game;
-  const deck = deckGenerator(virusDeck);
   const [boardSubject, board$] = createSubject<Board>(() => new ReplaySubject(1));
   const [playerSubject, player$] = createSubject<IPlayer>();
   const [startSubject, start$] = createSubject<typeof gameActions$>();
@@ -40,8 +37,6 @@ export function virusGenerator(numberOfPlayers = 4) {
   );
 
   ready$.subscribe(() => {
-    dealer = dealerGenerator(deck);
-
     deliverGameActions();
     startListeners();
     fireAction(EntitiesId.All, {
@@ -117,7 +112,12 @@ export function virusGenerator(numberOfPlayers = 4) {
           const { board: b, discard } = card.action(action, board);
           board = new Map(b.entries());
           boardSubject.next(board);
-          dealer.toStack(discard);
+          if (discard) {
+            fireAction(EntitiesId.Dealer, {
+              action: ActionsPayloadType.Stack,
+              cards: discard || null,
+            });
+          }
         }
 
         fireAction(EntitiesId.All, {
@@ -133,9 +133,15 @@ export function virusGenerator(numberOfPlayers = 4) {
     return players[newIndex];
   }
 
+  function assignDealer(playerId: Player['id']) {
+    fireAction(playerId, { action: ActionsPayloadType.AssignDealer, game, players });
+  }
+
   const actions = {
     start$,
     board$,
+    game,
+    assignDealer,
   };
 
   return actions;
