@@ -60,7 +60,7 @@ export class Virus extends Entity<Card> {
         throw Error('Invalid state');
     }
     organ.state = OrganCard.calculateState(organ.cards);
-    return { board };
+    return { board, discard };
   }
 }
 
