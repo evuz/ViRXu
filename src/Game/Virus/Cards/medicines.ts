@@ -51,7 +51,7 @@ export class Medicine extends Entity<Card> {
         throw Error('Invalid state');
     }
     organ.state = OrganCard.calculateState(organ.cards);
-    return { board, discard };
+    return { board, discard: discard.length ? discard : null };
   }
 }
 
