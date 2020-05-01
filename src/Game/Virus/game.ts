@@ -1,5 +1,5 @@
 import { ReplaySubject } from 'rxjs';
-import { scan, filter, tap } from 'rxjs/operators';
+import { scan, filter, tap, take } from 'rxjs/operators';
 
 import { IPlayer, Player } from '../Entities/Player';
 import { createSubject } from '../../Utils/createSubject';
@@ -15,7 +15,7 @@ import { Game } from '../Games';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
 
-export function virusGenerator(numberOfPlayers = 4) {
+export function virusGenerator(numberOfPlayers = 2) {
   let players: IPlayer[] = [];
   let currentPlayer: IPlayer = null;
   let board: Board = new Map();
@@ -75,12 +75,17 @@ export function virusGenerator(numberOfPlayers = 4) {
         currentPlayer = payload.player;
       });
 
-    allActions$.pipe(filter((action) => action.payload.action === ActionsPayloadType.Start)).subscribe(() => {
-      fireAction(EntitiesId.All, {
-        action: ActionsPayloadType.CurrentPlayer,
-        player: players[random(players.length - 1)],
+    allActions$
+      .pipe(
+        filter((action) => action.payload.action === ActionsPayloadType.Start),
+        take(1),
+      )
+      .subscribe(() => {
+        fireAction(EntitiesId.All, {
+          action: ActionsPayloadType.CurrentPlayer,
+          player: players[random(players.length - 1)],
+        });
       });
-    });
 
     myActions$.pipe(filter(({ payload }) => payload.action === ActionsPayloadType.Discard)).subscribe(() => {
       fireAction(EntitiesId.All, {

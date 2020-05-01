@@ -3,7 +3,7 @@ import { Observable, ReplaySubject, never, from } from 'rxjs';
 
 import { Action } from '../../Game/Entities/Action';
 import { createSubject } from '../../Utils/createSubject';
-import { switchMap, takeUntil, scan, pluck } from 'rxjs/operators';
+import { switchMap, takeUntil, scan, pluck, share } from 'rxjs/operators';
 
 export type ActionService = ReturnType<typeof actionsService>;
 
@@ -15,6 +15,7 @@ export function actionsService(socket: SocketAdapter) {
   function observe(): Observable<Action> {
     return room$.pipe(
       switchMap((actions$) => actions$.pipe(takeUntil(stop$))),
+      share(),
       scan(
         ({ count }, actions) => {
           if (!Array.isArray(actions)) {

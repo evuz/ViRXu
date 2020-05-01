@@ -1,4 +1,4 @@
-import { map, share } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 import { ActionService } from '../../Actions/actions.service';
 import { ActionsManagerAdapter } from './actionsManager.adapter';
@@ -8,10 +8,7 @@ import { searchCard } from '../../../Utils/searchCard';
 
 export function onlineActionManager(actionsService: ActionService): ActionsManagerAdapter {
   const translate = virusCardTranslate();
-  const actions$ = actionsService.observe().pipe(
-    map((action) => searchCard(action, translate.decode)),
-    share(),
-  );
+  const actions$ = actionsService.observe().pipe(map((action) => searchCard(action, translate.decode)));
 
   function fireAction(action: Action) {
     actionsService.emit(searchCard(action, translate.transcode));

@@ -53,11 +53,7 @@ export function PlayerState({ children }) {
       )
       .subscribe(() => {
         const dealer = players[random(players.length - 1)].id;
-        console.log('Assign delaer');
-        console.log('Dealer ->', dealer);
-        setTimeout(() => {
-          game.assignDealer(dealer);
-        }, 5000);
+        game.assignDealer(dealer);
       });
     return () => subscription?.unsubscribe();
   }, [players, player, game]);
