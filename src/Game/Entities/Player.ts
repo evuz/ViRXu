@@ -61,7 +61,10 @@ export function playerGenerator({ id = uid(6), name }: PlayerItem) {
     );
 
     myActions$
-      .pipe(filter((action) => action.payload.action === ActionsPayloadType.AssignDealer))
+      .pipe(
+        filter((action) => action.payload.action === ActionsPayloadType.AssignDealer),
+        take(1),
+      )
       .subscribe((action) => {
         const payload = <ActionPayloadAssignDealer>action.payload;
         dealerGenerator({ deck: getDeck(payload.game), players: payload.players });

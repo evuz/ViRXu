@@ -9,11 +9,13 @@ import { filterClassNames } from '../../Utils/filterClassNames';
 import { Requirement, RequirementApply } from '../../Game/Entities/Requirements';
 import { getSelections } from '../../Utils/getSelections';
 import { PlayerContext } from '../context/Player/PlayerContext';
+import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
 
 type HandPlayerProps = {};
 
 export const HandPlayer: FC<HandPlayerProps> = () => {
   const player = useContext(PlayerContext);
+  const currentPlayer = useContext(CurrentPlayerContext);
   const { selectionRequirements, setSelectionRequirements } = useContext(ManageSelectionContext);
 
   const [cards, setCards] = useState<ICard[]>([]);
@@ -26,7 +28,7 @@ export const HandPlayer: FC<HandPlayerProps> = () => {
 
   useEffect(() => {
     setCardsSelected(new Map());
-  }, [player]);
+  }, [currentPlayer]);
 
   if (!player) {
     return null;
