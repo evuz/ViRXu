@@ -9,6 +9,7 @@
     "build": "rimraf dist && parcel build ./src/index.html --no-source-maps",
     "test": "jest --silent",
     "test:dev": "jest --watch",
+    "test:staged": "jest --findRelatedTests",
     "transpile": "tsc --noEmit",
     "transpile:dev": "tsc --watch --noEmit",
     "commit": "git-cz"
@@ -54,6 +55,7 @@
   },
   "lint-staged": {
     "*.ts": [
+      "jest --bail --findRelatedTests",
       "prettier --write",
       "eslint"
     ]
