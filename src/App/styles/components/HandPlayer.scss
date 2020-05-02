@@ -1,9 +1,14 @@
 .HandPlayer {
   display: flex;
   align-items: center;
+  border-radius: $border-radius;
 
   &--no-selectable {
     pointer-events: none;
+  }
+
+  &--current-player {
+    background-color: rgba(get-color(green), .2);
   }
 
   &__cards {

@@ -34,13 +34,15 @@ export const HandPlayer: FC<HandPlayerProps> = () => {
     return null;
   }
 
+  const isCurrentPlayer = currentPlayer?.id === player?.id;
   const numberCardsSelected = Array.from(cardsSelected.values()).filter((v) => !!v).length;
-  const disableDiscard = !numberCardsSelected;
-  const disablePlay = numberCardsSelected != 1;
+  const disableDiscard = !isCurrentPlayer || !numberCardsSelected;
+  const disablePlay = !isCurrentPlayer || numberCardsSelected != 1;
   const isSelectable = selectionRequirements.place === SelectionPlace.Hand;
   const classNames = filterClassNames({
     HandPlayer: true,
     'HandPlayer--no-selectable': !isSelectable,
+    'HandPlayer--current-player': isCurrentPlayer,
   });
 
   function selectCard(card) {

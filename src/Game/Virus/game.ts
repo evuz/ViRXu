@@ -99,6 +99,13 @@ export function virusGenerator(numberOfPlayers = 2) {
       .subscribe((action: Action<ActionPayloadPlay>) => {
         const payload = action.payload;
 
+        if (action.from !== currentPlayer.id) {
+          return fireAction(action.from, {
+            action: ActionsPayloadType.Error,
+            errors: [{ key: 'player', message: `It's not this player's turn` }],
+          });
+        }
+
         if (payload.cards.length !== 1) {
           throw Error('Can only play one card at a time');
         }
