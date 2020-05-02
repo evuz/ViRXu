@@ -1,7 +1,6 @@
 import { firebaseSocket } from './Adapters/Socket/firebase.socket';
 import { createRoom } from './Room/createRoom.service';
 import { createDomain } from './domain.service';
-import { listenActions } from './Room/listenActions.service';
 import { getRoom } from './Room/getRoom';
 import { createActionableService } from './Actions/createActionable.service';
 import { actionsManager as actionsManagerAdapter } from './Adapters/ActionsManager';
@@ -23,7 +22,6 @@ export function domainFactory() {
     createActionable: createActionableService(actionsManager),
     getRoom: getRoom(socket),
     createRoom: createRoom(socket),
-    listenActions: listenActions(socket),
   };
 
   const adapters = {
