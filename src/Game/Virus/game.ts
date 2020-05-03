@@ -25,7 +25,7 @@ export function virusGenerator(numberOfPlayers = 2) {
   const [boardSubject, board$] = createSubject<Board>(() => new ReplaySubject(1));
   const [playerSubject, player$] = createSubject<IPlayer>();
   const [startSubject, start$] = createSubject<typeof gameActions$>();
-  const [gameActions$, fireAction] = domain.adapter('createActionable').execute(id);
+  const [gameActions$, fireAction] = domain().adapter('createActionable').execute(id);
 
   const ready$ = player$.pipe(
     tap((player) => {

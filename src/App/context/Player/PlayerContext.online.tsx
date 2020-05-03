@@ -32,7 +32,7 @@ export function PlayerState({ children }) {
 
   useEffect(() => {
     // Choose dealer
-    const subscription = domain
+    const subscription = domain()
       .adapter('actionsManager')
       .actions$.pipe(filter(({ payload }) => payload.action === ActionsPayloadType.NewPlayer))
       .subscribe((action) => {
@@ -44,7 +44,7 @@ export function PlayerState({ children }) {
 
   useEffect(() => {
     // Choose dealer
-    const subscription = domain
+    const subscription = domain()
       .adapter('actionsManager')
       .actions$.pipe(
         filter(({ payload }) => payload.action === ActionsPayloadType.Start),

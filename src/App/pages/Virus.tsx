@@ -22,17 +22,17 @@ export const Virus = ({ params }) => {
   const [room, setRoom] = useState<Room>(null);
 
   useEffect(() => {
-    domain
+    domain()
       .get('getRoom')
       .execute(params.roomId)
       .then((room) => {
         setRoom(room);
-        domain.get('enterRoom').execute(room.id);
+        domain().get('enterRoom').execute(room.id);
       })
       .catch(() => {
         setLocation('/not-found', true);
       });
-    return () => domain.get('enterRoom').execute(null);
+    return () => domain().get('enterRoom').execute(null);
   }, [params, setLocation]);
 
   useEffect(() => {

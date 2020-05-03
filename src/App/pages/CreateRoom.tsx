@@ -10,7 +10,7 @@ export const CreateRoom: FC<RouteComponentProps> = ({ params }) => {
   const { roomId } = params;
 
   function click() {
-    domain
+    domain()
       .get('createRoom')
       .execute({ name: 'New Room' })
       .then((room) => {

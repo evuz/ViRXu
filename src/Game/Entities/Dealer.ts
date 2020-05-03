@@ -22,7 +22,7 @@ export function dealerGenerator({ deck, players }: IDealerGenerator) {
 
   const initialCardsByPlayer = 3;
   const id = EntitiesId.Dealer;
-  const [actions$, fireAction] = domain.adapter('createActionable').execute(id);
+  const [actions$, fireAction] = domain().adapter('createActionable').execute(id);
 
   function restart() {
     cards = deck.slice();

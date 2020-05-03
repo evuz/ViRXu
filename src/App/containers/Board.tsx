@@ -31,7 +31,7 @@ export const Board: FC<BoardProps> = () => {
   const boardSelectable = selectionRequirements.place === SelectionPlace.Board;
 
   useEffect(() => {
-    const subscription: Subscription = domain
+    const subscription: Subscription = domain()
       .adapter('actionsManager')
       .actions$.pipe(filter(({ payload }) => payload.action === ActionsPayloadType.NewPlayer))
       .subscribe((action) => {
