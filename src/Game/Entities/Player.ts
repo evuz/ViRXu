@@ -27,7 +27,7 @@ export function playerGenerator({ id = uid(6), name }: PlayerItem) {
   let hand: Card[] = [];
 
   const [handSubject, hand$] = createSubject<Card[]>(() => new ReplaySubject<Card[]>(1));
-  const [actions$, fireAction] = domain.get('createActionable').execute(id);
+  const [actions$, fireAction] = domain.adapter('createActionable').execute(id);
 
   // TODO: make hand$ with scan operator
   function addCardsHand(cards: Card[]) {

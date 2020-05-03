@@ -1,10 +1,20 @@
-type ICreateDomain<T, K> = {
+import { Observable } from 'rxjs';
+
+export type UseCase = {
+  execute(...args): Observable<any> | Promise<any>;
+};
+
+export type UseCases = {
+  [e: string]: UseCase;
+};
+
+type ICreateDomain<T extends UseCases, K> = {
   useCases: T;
   config: any;
   adapters: K;
 };
 
-export function createDomain<T, K>({ useCases, config, adapters }: ICreateDomain<T, K>) {
+export function createDomain<T extends UseCases, K>({ useCases, config, adapters }: ICreateDomain<T, K>) {
   const conf = Object.freeze(config);
   function get<U extends keyof T>(useCase: U) {
     if (!useCases[useCase]) {

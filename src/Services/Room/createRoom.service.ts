@@ -4,7 +4,7 @@ import { Room, RoomState } from './Entities/Room';
 export function createRoom(socket: SocketAdapter) {
   const actions = {
     execute({ name }): Promise<Room> {
-      return socket.emit('room', { name, state: RoomState.Open });
+      return socket.emit('rooms', { name, state: RoomState.Open });
     },
   };
   return actions;

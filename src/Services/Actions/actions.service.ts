@@ -39,7 +39,7 @@ export function actionsService(socket: SocketAdapter) {
     if (!_roomId) {
       throw Error(`You're not in a room yet`);
     }
-    return socket.emit(`actions/${_roomId}`, action);
+    return socket.emit(`rooms/${_roomId}/actions`, action);
   }
 
   function enterRoom(roomId: string) {
@@ -47,9 +47,10 @@ export function actionsService(socket: SocketAdapter) {
     stopSubject.next();
     if (!_roomId) {
       roomSubject.next(never());
-      return;
+      return Promise.resolve(roomId);
     }
-    roomSubject.next(socket.on(`actions/${_roomId}`, { list: true }));
+    roomSubject.next(socket.on(`rooms/${_roomId}/actions`, { list: true }));
+    return Promise.resolve(roomId);
   }
 
   return {

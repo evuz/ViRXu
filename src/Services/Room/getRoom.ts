@@ -4,7 +4,7 @@ import { Room } from './Entities/Room';
 export function getRoom(socket: SocketAdapter) {
   const actions = {
     execute(roomId): Promise<Room> {
-      return socket.once<Room>(`room/${roomId}`).then((room) => {
+      return socket.once<Room>(`rooms/${roomId}`).then((room) => {
         if (room.state === undefined) {
           throw Error(`Room ${roomId} doesn't exist`);
         }
