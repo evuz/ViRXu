@@ -5,12 +5,7 @@ import 'firebase/database';
 
 import { SocketAdapter } from './socket.adapter';
 
-export function firebaseSocket(config): SocketAdapter {
-  const firebase = app.initializeApp({
-    apiKey: config.apiKey,
-    databaseURL: config.databaseURL,
-  });
-
+export function firebaseSocket(firebase: app.app.App): SocketAdapter {
   // TODO: search another solution to avoid test error
   let database: app.database.Database;
   if (process.env.NODE_ENV !== 'test') {
