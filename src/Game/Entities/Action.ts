@@ -6,4 +6,5 @@ export type Action<T = ActionPayload> = {
   to: Player['id'] | EntitiesId;
   from: Player['id'] | EntitiesId;
   payload: T;
+  id: string;
 };

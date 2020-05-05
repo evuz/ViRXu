@@ -15,7 +15,7 @@ function socketMock() {
   };
 }
 
-const valuesGenerator = (n = 3) => Array.from({ length: n }).map((_, i) => ({ value: i }));
+const valuesGenerator = (n = 3) => Array.from({ length: n }).map((_, i) => ({ id: i }));
 
 describe('Actions Service', () => {
   let service: ActionService;
@@ -34,8 +34,17 @@ describe('Actions Service', () => {
   });
 
   test('should only recive values when it is in a room', () => {
-    const expectedOnValues = { a: 0, b: 1, c: 2, d: 3, e: 4 };
-    on$ = interval(1000).pipe(take(5));
+    const expectedOnValues = {
+      a: { id: 0 },
+      b: { id: 1 },
+      c: { id: 2 },
+      d: { id: 3 },
+      e: { id: 4 },
+    };
+    on$ = interval(1000).pipe(
+      take(5),
+      map((v) => ({ id: v })),
+    );
 
     testScheduler.run(({ expectObservable }) => {
       const expectedOnMarble = '1s a 999ms b 999ms c 999ms d 999ms (e|)';
@@ -52,8 +61,17 @@ describe('Actions Service', () => {
   });
 
   test('check listen values with observe', () => {
-    const expectedOnValues = { a: 0, b: 1, c: 2, d: 3, e: 4 };
-    on$ = interval(1000).pipe(take(5));
+    const expectedOnValues = {
+      a: { id: 0 },
+      b: { id: 1 },
+      c: { id: 2 },
+      d: { id: 3 },
+      e: { id: 4 },
+    };
+    on$ = interval(1000).pipe(
+      take(5),
+      map((v) => ({ id: v })),
+    );
 
     testScheduler.run(({ expectObservable }) => {
       const expectedOnMarble = '1s a 999ms b 999ms c 999ms d 999ms e';
@@ -63,8 +81,17 @@ describe('Actions Service', () => {
   });
 
   test('stop observer when leaving the room', () => {
-    const expectedOnValues = { a: 0, b: 1, c: 2, d: 3, e: 4 };
-    on$ = interval(1000).pipe(take(5));
+    const expectedOnValues = {
+      a: { id: 0 },
+      b: { id: 1 },
+      c: { id: 2 },
+      d: { id: 3 },
+      e: { id: 4 },
+    };
+    on$ = interval(1000).pipe(
+      take(5),
+      map((v) => ({ id: v })),
+    );
 
     testScheduler.run(({ expectObservable }) => {
       const expectedOnMarble = '1s a 999ms b 999ms c 999ms d 999ms e';
@@ -79,8 +106,17 @@ describe('Actions Service', () => {
   });
 
   test('stop observer when leaving the room', () => {
-    const expectedOnValues = { a: 0, b: 1, c: 2, d: 3, e: 4 };
-    on$ = interval(1000).pipe(take(5));
+    const expectedOnValues = {
+      a: { id: 0 },
+      b: { id: 1 },
+      c: { id: 2 },
+      d: { id: 3 },
+      e: { id: 4 },
+    };
+    on$ = interval(1000).pipe(
+      take(5),
+      map((v) => ({ id: v })),
+    );
 
     testScheduler.run(({ expectObservable }) => {
       const expectedOnMarble = '1s a 999ms b 999ms c 999ms d 999ms e';
