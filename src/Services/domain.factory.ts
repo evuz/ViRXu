@@ -20,11 +20,12 @@ export function domainFactory() {
   const firebase = firebaseAdapter(config);
 
   const auth = firebaseAuth(firebase);
+  const authSrv = authService(auth);
+
   const socket = firebaseSocket(firebase);
   const actionsSrv = actionsService(socket);
-  const actionsManager = actionsManagerAdapter(actionsSrv);
+  const actionsManager = actionsManagerAdapter({ actionsService: actionsSrv, authService: authSrv });
   const createActionable = createActionableAdapter(actionsManager);
-  const authSrv = authService(auth);
 
   const useCases = {
     signIn: createUseCase(authSrv.signIn),

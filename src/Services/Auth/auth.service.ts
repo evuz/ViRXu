@@ -1,6 +1,8 @@
 import { AuthAdapter, Provider } from '../Adapters/Auth/auth.adapter';
 import { share } from 'rxjs/operators';
 
+export type AuthService = ReturnType<typeof authService>;
+
 export function authService(authAdapter: AuthAdapter) {
   const user$ = authAdapter.user$.pipe(share());
 
