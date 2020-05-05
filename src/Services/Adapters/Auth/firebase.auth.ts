@@ -31,12 +31,7 @@ function userMapper(user: app.User): User {
 }
 
 export function firebaseAuth(firebase: app.app.App): AuthAdapter {
-  // TODO: search another solution to avoid test error
-  let auth: app.auth.Auth;
-  if (process.env.NODE_ENV !== 'test') {
-    auth = firebase.auth();
-  }
-
+  const auth = firebase.auth();
   const user$ = authState(auth).pipe(map(userMapper));
 
   function signIn({ provider }: { provider: Provider }) {

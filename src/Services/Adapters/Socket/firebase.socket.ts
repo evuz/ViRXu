@@ -6,11 +6,7 @@ import 'firebase/database';
 import { SocketAdapter } from './socket.adapter';
 
 export function firebaseSocket(firebase: app.app.App): SocketAdapter {
-  // TODO: search another solution to avoid test error
-  let database: app.database.Database;
-  if (process.env.NODE_ENV !== 'test') {
-    database = firebase.database();
-  }
+  const database = firebase.database();
 
   function emit<T>(...args): Promise<T> {
     const entity: string = args[0];

@@ -14,7 +14,6 @@ import { Action } from '../../Action';
 import { ActionPayloadPlay } from '../../ActionPayload';
 import { Card } from '../../Card';
 import { OrganCard, IOrganCard } from '../../OrganCard';
-import { playerGenerator } from '../../Player';
 import { requirement, RequirementApply, RequirementType } from '../../Requirements';
 import { requirementsValidator } from '../Validators';
 import { OrganCardState } from '../../../Enums/OrganCardState';
@@ -24,7 +23,7 @@ import { Board } from '../../Board';
 function createBoard(cardsByPlayer: Card[][][]) {
   const board: Board = new Map();
   const players = cardsByPlayer.map((cardsByBoard, id) => {
-    const player = playerGenerator({ id: `${id}`, name: `Player ${id}` });
+    const player = { id: `${id}`, name: `Player ${id}` };
     const cardsPlayed = cardsByBoard.map((cards) => {
       const organ = <IOrganCard>cards[0];
       if (organ.type !== VirusCardType.Organ) {
@@ -45,6 +44,7 @@ function createBoard(cardsByPlayer: Card[][][]) {
 
 function createAction(from: string, payload: Omit<ActionPayloadPlay, 'action'>): Action<ActionPayloadPlay> {
   return {
+    id: null,
     to: EntitiesId.Game,
     from,
     payload: {
