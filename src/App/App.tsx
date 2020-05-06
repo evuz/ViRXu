@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Router } from './Router';
+import { Router } from './router/guards/Routes';
 
 import './styles/index.scss';
 import { AppContext } from './context/AppContext';
