@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 
 import { Player, playerGenerator, IPlayer } from '../../../Game/Entities/Player';
-import { uid } from '../../../Utils/uid';
 import { filter, take } from 'rxjs/operators';
 import { domain } from '../../../Services/domain';
 import { ActionsPayloadType } from '../../../Game/Enums/ActionsPayloadType';
@@ -17,8 +16,14 @@ export function PlayerState({ children }) {
   const [players, setPlayers] = useState<IPlayer[]>([]);
 
   useEffect(() => {
-    const name = uid(6);
-    setPlayer(playerGenerator({ name, id: name }));
+    const subscription = domain()
+      .get('user')
+      .execute()
+      .subscribe((user) => {
+        console.log(user);
+        setPlayer(user ? playerGenerator(user) : null);
+      });
+    return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {

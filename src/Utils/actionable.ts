@@ -13,6 +13,7 @@ export function actionableGenerator(manager: ActionsManagerAdapter, from: Action
       to,
       from,
       payload,
+      id: null,
     });
   }
   return [actions$, fireAction] as const;
