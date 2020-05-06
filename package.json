@@ -1,29 +1,50 @@
 {
   "name": "virxu",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "parcel ./src/index.html",
-    "build": "parcel build ./src/index.html",
+    "start": "parcel ./src/index.html --open",
+    "start:offline": "cross-env MODE=offline parcel ./src/index.html --open",
+    "build": "rimraf dist && parcel build ./src/index.html --no-source-maps",
+    "test": "jest --silent",
+    "test:dev": "jest --watch",
+    "test:staged": "jest --findRelatedTests",
+    "transpile": "tsc --noEmit",
+    "transpile:dev": "tsc --watch --noEmit",
     "commit": "git-cz"
   },
   "dependencies": {
-    "rxjs": "^6.5.4"
+    "firebase": "^7.14.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "rxfire": "^3.12.1",
+    "rxjs": "^6.5.4",
+    "wouter": "^2.4.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
+    "@types/jest": "^25.2.1",
+    "@types/react": "^16.9.32",
+    "@types/react-dom": "^16.9.6",
     "@typescript-eslint/eslint-plugin": "^2.25.0",
     "@typescript-eslint/parser": "^2.25.0",
+    "cross-env": "^7.0.2",
     "cz-conventional-changelog": "^3.1.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.1",
     "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-react-hooks": "^3.0.0",
     "husky": "^4.2.3",
+    "jest": "^25.2.7",
     "lint-staged": "^10.0.10",
     "parcel-bundler": "^1.12.4",
     "prettier": "^2.0.2",
+    "rimraf": "^3.0.2",
+    "sass": "^1.26.3",
+    "ts-jest": "^25.3.1",
     "typescript": "3.8.3"
   },
   "husky": {
@@ -34,6 +55,7 @@
   },
   "lint-staged": {
     "*.ts": [
+      "jest --bail --findRelatedTests",
       "prettier --write",
       "eslint"
     ]
@@ -47,5 +69,9 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
   }
 }

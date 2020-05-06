@@ -1,0 +1,15 @@
+.BoardPlayer {
+  flex: 1;
+  border-radius: $border-radius;
+
+  &--active {
+    background-color: rgba(get-color(accent), .5);
+  }
+
+  &__cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+}

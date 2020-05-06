@@ -1,0 +1,25 @@
+.HandPlayer {
+  display: flex;
+  align-items: center;
+  border-radius: $border-radius;
+
+  &--no-selectable {
+    pointer-events: none;
+  }
+
+  &--current-player {
+    background-color: rgba(get-color(green), .2);
+  }
+
+  &__cards {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__buttons {
+    & > button {
+      margin: $spacing-xs 0;
+    }
+  }
+}

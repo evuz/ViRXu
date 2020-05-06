@@ -1,8 +1,7 @@
-import { virusDeck } from './games/Virus/deck';
-import { dealerGenerator } from './games/Entities/Dealer';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './Services/domain';
 
-console.log('Use window.virus to see the game');
-(<any>window).virus = {
-  deck: virusDeck,
-  dealer: dealerGenerator(virusDeck),
-};
+import { App } from './App/App';
+
+ReactDOM.render(React.createElement(App), document.getElementById('app'));
