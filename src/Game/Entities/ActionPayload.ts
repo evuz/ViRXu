@@ -12,7 +12,8 @@ export type ActionPayload =
   | ActionPayloadPlay
   | ActionPayloadError
   | ActionPayloadStack
-  | ActionPayloadAssignDealer;
+  | ActionPayloadAssignDealer
+  | ActionPayloadWin;
 
 export type ActionPayloadStart = {
   action: ActionsPayloadType.Start;
@@ -59,4 +60,9 @@ export type ActionPayloadAssignDealer = {
   action: ActionsPayloadType.AssignDealer;
   game: Game;
   players: IPlayer[];
+};
+
+export type ActionPayloadWin = {
+  action: ActionsPayloadType.Win;
+  winner: IPlayer;
 };

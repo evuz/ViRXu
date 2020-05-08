@@ -12,6 +12,7 @@ import { requirementsValidator } from '../Entities/Requirements/Validators';
 import { Board } from '../Entities/Board';
 import { domain } from '../../Services/domain';
 import { Game } from '../Games';
+import { checkWin } from './win';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
 
@@ -130,6 +131,16 @@ export function virusGenerator(numberOfPlayers = 2) {
               cards: discard || null,
             });
           }
+        }
+
+        const winnerId = checkWin(board);
+
+        if (winnerId) {
+          const winner = players.find((player) => player.id === winnerId);
+          return fireAction(EntitiesId.All, {
+            action: ActionsPayloadType.Win,
+            winner,
+          });
         }
 
         fireAction(EntitiesId.All, {
