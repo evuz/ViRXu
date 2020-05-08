@@ -7,7 +7,7 @@ import { HandPlayer } from '../containers/HandPlayer';
 import { GameContext } from '../context/Game/GameContext';
 import { ActionsPayloadType } from '../../Game/Enums/ActionsPayloadType';
 import { Action } from '../../Game/Entities/Action';
-import { ActionPayloadError } from '../../Game/Entities/ActionPayload';
+import { ActionPayloadError, ActionPayloadWin } from '../../Game/Entities/ActionPayload';
 import { ManageSelectionContext, SelectionPlace } from '../context/ManageSelection/ManageSelectionContext';
 import { CurrentPlayerContext } from '../context/CurrentPlayer/CurrentPlayerContext';
 import { domain } from '../../Services/domain';
@@ -51,6 +51,17 @@ export const Virus = ({ params }) => {
           console.error(error.message);
         });
         setSelectionRequirements({ place: SelectionPlace.Hand });
+      });
+    return () => subscription?.unsubscribe();
+  }, [game, setSelectionRequirements]);
+
+  useEffect(() => {
+    const subscription = domain()
+      .adapter('actionsManager')
+      .actions$.pipe(filter(({ payload }) => payload.action === ActionsPayloadType.Win))
+      .subscribe((action: Action<ActionPayloadWin>) => {
+        const { payload } = action;
+        console.log(`%c ${payload.winner.name} is the winner!`, 'color: #bada55');
       });
     return () => subscription?.unsubscribe();
   }, [game, setSelectionRequirements]);

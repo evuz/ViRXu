@@ -8,4 +8,5 @@ export const enum ActionsPayloadType {
   Error,
   Stack,
   AssignDealer,
+  Win,
 }
