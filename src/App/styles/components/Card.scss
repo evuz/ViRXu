@@ -1,18 +1,6 @@
 .Card {
   height: $font-size * 8;
-  width: $font-size * 6;
-  border-radius: $border-radius;
   margin: $spacing-xs;
-  padding: $spacing-xs;
-  background: get-color(dark);
-  box-shadow: $shadow;
-  transition: all 100ms;
-  overflow: hidden;
-
-  &--selectable:hover {
-    transform: translateY(-$spacing-xs);
-    box-shadow: $shadow-l;
-  }
 
   &--selected {
     position: relative;
@@ -24,82 +12,20 @@
       left: 0;
       bottom: 0;
       right: 0;
-      background: rgba(get-color(primary), .2);
+      background: rgba(get-color(primary), 0.2);
     }
   }
 
-  &--red {
-    background: linear-gradient(
-      45deg,
-      rgba(get-color(red), 1) 0%,
-      rgba(get-color(red, light, 50%), 1) 50%,
-      rgba(get-color(red), 1) 100%
-    );
-
-    .Card__content {
-      background: rgba(get-color(red), 0.3);
+  &--selectable & {
+    &__content:hover {
+      transform: translateY(-$spacing-xs);
+      box-shadow: $shadow-l;
     }
-  }
-
-  &--blue {
-    background: linear-gradient(
-      45deg,
-      rgba(get-color(blue), 1) 0%,
-      rgba(get-color(blue, light, 50%), 1) 50%,
-      rgba(get-color(blue), 1) 100%
-    );
-
-    .Card__content {
-      background: rgba(get-color(blue), 0.3);
-    }
-  }
-
-  &--green {
-    background: linear-gradient(
-      45deg,
-      rgba(get-color(green), 1) 0%,
-      rgba(get-color(green, light, 50%), 1) 50%,
-      rgba(get-color(green), 1) 100%
-    );
-
-    .Card__content {
-      background: rgba(get-color(green), 0.3);
-    }
-  }
-
-  &--yellow {
-    background: linear-gradient(
-      45deg,
-      rgba(get-color(yellow), 1) 0%,
-      rgba(get-color(yellow, light, 50%), 1) 50%,
-      rgba(get-color(yellow), 1) 100%
-    );
-
-    .Card__content {
-      background: rgba(get-color(yellow), 0.3);
-    }
-  }
-
-  &--multi {
-    background: linear-gradient(
-      45deg,
-      rgba(get-color(blue), 0.7) 0%,
-      rgba(get-color(green), 0.7) 33%,
-      rgba(get-color(yellow), 0.7) 66%,
-      rgba(get-color(red), 0.7) 100%
-    );
   }
 
   &__content {
+    transition: all 100ms;
     height: 100%;
-    width: 100%;
-    border: 3px solid white;
-    border-radius: $border-radius;
-    padding: $spacing-xs;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    box-shadow: $shadow;
   }
 }
