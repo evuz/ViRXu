@@ -5,7 +5,6 @@ import { requirement, RequirementApply, RequirementType } from '../../Entities/R
 import { uid } from '../../../Utils/uid';
 import { OrganCardState } from '../../Enums/OrganCardState';
 import { Action } from '../../Entities/Action';
-import { Entity } from '../../../Utils/Entity';
 import { Board } from '../../Entities/Board';
 import { ActionPayloadPlay } from '../../Entities/ActionPayload';
 import { getPlayer } from '../../../Utils/getPlayer';
@@ -23,8 +22,7 @@ function virusRequirement(color: VirusCardColor[]) {
   ];
 }
 
-export interface Virus extends Card {}
-export class Virus extends Entity<Card> {
+export class Virus extends Card {
   action(action: Action, board: Board) {
     const payload = <ActionPayloadPlay>action.payload;
 

@@ -93,7 +93,7 @@ describe('RequirementsValidator', () => {
     const [board, players] = createBoard([[[heart], [bone]], [[heart]]]);
     const validation = requirementsValidator(
       createAction(players[0].id, {
-        cards: [{ ...brain, requirements: null }],
+        cards: [<Card>{ ...brain, requirements: null }],
       }),
       board,
     );
@@ -107,7 +107,7 @@ describe('RequirementsValidator', () => {
         const validation = requirementsValidator(
           createAction(players[0].id, {
             cards: [
-              {
+              <Card>{
                 ...brain,
                 requirements: [
                   requirement(RequirementApply.Rules)
@@ -129,7 +129,7 @@ describe('RequirementsValidator', () => {
         const validation = requirementsValidator(
           createAction(players[0].id, {
             cards: [
-              {
+              <Card>{
                 ...brain,
                 requirements: [
                   requirement(RequirementApply.Rules)
@@ -152,7 +152,7 @@ describe('RequirementsValidator', () => {
         const validation = requirementsValidator(
           createAction(players[0].id, {
             cards: [
-              {
+              <Card>{
                 ...brain,
                 requirements: [
                   requirement(RequirementApply.Rules)
@@ -174,7 +174,7 @@ describe('RequirementsValidator', () => {
         const validation = requirementsValidator(
           createAction(players[0].id, {
             cards: [
-              {
+              <Card>{
                 ...brain,
                 requirements: [
                   requirement(RequirementApply.Rules)

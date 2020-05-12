@@ -3,7 +3,6 @@ import { requirement, RequirementApply, RequirementType } from '../../Entities/R
 import { VirusCardColor } from '../../Enums/VirusCardColor';
 import { VirusCardType } from '../../Enums/VirusCardType';
 import { uid } from '../../../Utils/uid';
-import { Entity } from '../../../Utils/Entity';
 import { Action } from '../../Entities/Action';
 import { Board } from '../../Entities/Board';
 import { ActionPayloadPlay } from '../../Entities/ActionPayload';
@@ -21,8 +20,7 @@ function organsRequirement(color: VirusCardColor) {
   ];
 }
 
-export interface Organ extends Card {}
-export class Organ extends Entity<Card> {
+export class Organ extends Card {
   action(action: Action, board: Board) {
     const payload = <ActionPayloadPlay>action.payload;
     const player = getPlayer(<string>action.from, board);
@@ -39,8 +37,8 @@ export class Organ extends Entity<Card> {
 export const multiOrgan: CardGenerator = () => {
   return new Organ({
     id: uid(6),
-    cardId: 'multiOrgan',
-    name: 'Multicolor organ',
+    cardId: 'body',
+    name: 'Body',
     type: VirusCardType.Organ,
     color: VirusCardColor.Multi,
   });

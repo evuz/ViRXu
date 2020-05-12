@@ -4,7 +4,6 @@ import { CardGenerator, Card } from '../../Entities/Card';
 import { requirement, RequirementApply, RequirementType } from '../../Entities/Requirements';
 import { uid } from '../../../Utils/uid';
 import { OrganCardState } from '../../Enums/OrganCardState';
-import { Entity } from '../../../Utils/Entity';
 import { Action } from '../../Entities/Action';
 import { Board } from '../../Entities/Board';
 import { getPlayer } from '../../../Utils/getPlayer';
@@ -23,8 +22,7 @@ function medicineRequirement(color: VirusCardColor[]) {
   ];
 }
 
-export interface Medicine extends Card {}
-export class Medicine extends Entity<Card> {
+export class Medicine extends Card {
   action(action: Action, board: Board) {
     const discard: Card[] = [];
     const payload = <ActionPayloadPlay>action.payload;
