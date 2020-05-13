@@ -1,3 +1,15 @@
 .App {
+  min-height: 100vh;
+  min-width: 100vw;
   color: get-color(dark);
+  &::before {
+    content: '';
+    position: fixed;
+    background: get-color(dark, light, 40%);
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
 }
