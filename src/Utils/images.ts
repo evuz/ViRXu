@@ -1,7 +1,7 @@
 // @ts-ignore
-import images from '../../../public/**/*.webp';
+import images from '../../public/**/*.webp';
 // @ts-ignore
-import root from '../../../public/*.webp';
+import root from '../../public/*.webp';
 
 export default {
   ...root,
