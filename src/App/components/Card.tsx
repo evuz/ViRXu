@@ -3,9 +3,7 @@ import React, { FC } from 'react';
 import { Card as ICard } from '../../Game/Entities/Card';
 import { filterClassNames } from '../../Utils/filterClassNames';
 
-// @ts-ignore
-// Get card images
-import cardImages from '../../../public/cards/*.webp';
+import { cards as cardImages } from '../../Utils/images';
 
 type CardProps = {
   card: ICard;
