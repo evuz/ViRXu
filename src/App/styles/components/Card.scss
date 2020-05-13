@@ -1,6 +1,7 @@
 .Card {
-  height: $font-size * 8;
+  height: 100%;
   margin: $spacing-xs;
+  transition: all 100ms;
 
   &--selected {
     position: relative;
@@ -16,15 +17,16 @@
     }
   }
 
-  &--selectable & {
-    &__content:hover {
-      transform: translateY(-$spacing-xs);
+  &--selectable:hover {
+    transform: translateY(-$spacing-s);
+    .Card__content {
       box-shadow: $shadow-l;
     }
   }
 
   &__content {
-    transition: all 100ms;
+    max-height: $font-size * 20;
+    border-radius: 10px;
     height: 100%;
     box-shadow: $shadow;
   }

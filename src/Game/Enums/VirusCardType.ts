@@ -1,6 +1,6 @@
 export const enum VirusCardType {
-  Organ,
-  Virus,
-  Medicine,
-  Treatment,
+  Organ = 'organ',
+  Virus = 'virus',
+  Medicine = 'medicine',
+  Treatment = 'treatment',
 }

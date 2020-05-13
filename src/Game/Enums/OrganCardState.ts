@@ -1,7 +1,7 @@
 export enum OrganCardState {
-  Free,
-  Infect,
-  Extirpate,
-  Vaccinate,
-  Immnunise,
+  Free = 'free',
+  Infect = 'infect',
+  Extirpate = 'extirpate',
+  Vaccinate = 'vaccinate',
+  Immnunise = 'immunise',
 }

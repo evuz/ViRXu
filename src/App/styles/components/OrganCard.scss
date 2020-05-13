@@ -1,0 +1,30 @@
+.OrganCard {
+  position: relative;
+  height: 100%;
+
+  &__states {
+    font-size: $font-size-s;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 25%;
+    color: get-color(white);
+    & > i {
+      margin: $spacing-s;
+    }
+
+    &--m {
+      font-size: $font-size-m;
+      & > i {
+        margin: $spacing-s;
+      }
+    }
+
+    &--l {
+      font-size: $font-size-l;
+      & > i {
+        margin: $spacing-m;
+      }
+    }
+  }
+}
