@@ -2,11 +2,11 @@ import { requirement, RequirementApply, RequirementType } from '../Entities/Requ
 import { VirusCardType } from '../Enums/VirusCardType';
 import { OrganCardState } from '../Enums/OrganCardState';
 import { Board } from '../Entities/Board';
-import { IPlayer } from '../Entities/Player';
 import { requirementsValidator } from '../Entities/Requirements/Validators';
 import { ActionPayloadPlay } from '../Entities/ActionPayload';
 import { Action } from '../Entities/Action';
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
+import { User } from '../../Services/Auth/Entities/User';
 
 export function winRequirement() {
   return requirement(RequirementApply.Rules)
@@ -17,7 +17,7 @@ export function winRequirement() {
     .execute();
 }
 
-function createActionPlay(playerId: IPlayer['id']): Action<ActionPayloadPlay> {
+function createActionPlay(playerId: User['id']): Action<ActionPayloadPlay> {
   const cards: any = [{ requirements: [winRequirement()] }];
   return {
     id: null,
@@ -30,7 +30,7 @@ function createActionPlay(playerId: IPlayer['id']): Action<ActionPayloadPlay> {
   };
 }
 
-export function checkWin(board: Board): IPlayer['id'] | null {
+export function checkWin(board: Board): User['id'] | null {
   for (const [playerId] of board.entries()) {
     const errors = requirementsValidator(createActionPlay(playerId), board);
     if (!errors) {

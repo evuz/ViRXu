@@ -17,7 +17,6 @@ const enum StateSize {
 }
 
 function iconStateSize(height: number) {
-  console.log(height);
   if (height > 260) {
     return StateSize.L;
   } else if (height > 180) {

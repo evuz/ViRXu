@@ -1,12 +1,12 @@
 import React, { FC } from 'react';
 
 import { OrganCard as OrganCardComponent } from './OrganCard';
-import { IPlayer } from '../../Game/Entities/Player';
 import { filterClassNames } from '../../Utils/filterClassNames';
 import { OrganCard } from '../../Game/Entities/OrganCard';
+import { User } from '../../Services/Auth/Entities/User';
 
 type BoardPlayer = {
-  player: IPlayer;
+  player: User;
   board: OrganCard[];
   onSelectCard: Function;
   selectable?: boolean;

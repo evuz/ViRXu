@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 
-import { Player, playerGenerator, IPlayer } from '../../../Game/Entities/Player';
+import { Player, playerGenerator } from '../../../Game/Entities/Player';
 import { filter, take } from 'rxjs/operators';
 import { domain } from '../../../Services/domain';
 import { ActionsPayloadType } from '../../../Game/Enums/ActionsPayloadType';
@@ -8,12 +8,13 @@ import { ActionPayloadNewPlayer } from '../../../Game/Entities/ActionPayload';
 import { PlayerContext } from './context';
 import { GameContext } from '../Game/GameContext';
 import { random } from '../../../Utils/random';
+import { User } from '../../../Services/Auth/Entities/User';
 
 export function PlayerState({ children }) {
   const { game } = useContext(GameContext);
 
   const [player, setPlayer] = useState<Player>(null);
-  const [players, setPlayers] = useState<IPlayer[]>([]);
+  const [players, setPlayers] = useState<User[]>([]);
 
   useEffect(() => {
     const subscription = domain()

@@ -7,13 +7,13 @@ import { EntitiesId } from '../Enums/EntitiesId';
 import { ActionPayloadDiscard, ActionPayloadPlay, ActionPayloadStack } from './ActionPayload';
 import { Card } from './Card';
 import { domain } from '../../Services/domain';
-import { IPlayer } from './Player';
+import { User } from '../../Services/Auth/Entities/User';
 
 export type Dealer = ReturnType<typeof dealerGenerator>;
 
 export type IDealerGenerator = {
   deck: Deck;
-  players: IPlayer[];
+  players: User[];
 };
 
 export function dealerGenerator({ deck, players }: IDealerGenerator) {

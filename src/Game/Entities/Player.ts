@@ -10,18 +10,13 @@ import { uid } from '../../Utils/uid';
 import { domain } from '../../Services/domain';
 import { dealerGenerator } from './Dealer';
 import { getDeck } from '../../Utils/getDeck';
-
-export type IPlayer = {
-  id: string;
-  name: string;
-};
+import { User } from '../../Services/Auth/Entities/User';
 
 export type Player = ReturnType<typeof playerGenerator>;
 
-export type PlayerItem = {
-  id?: IPlayer['id'];
-  name: IPlayer['name'];
-};
+interface PlayerItem extends Omit<User, 'id'> {
+  id?: User['id'];
+}
 
 export function playerGenerator({ id = uid(6), name }: PlayerItem) {
   let hand: Card[] = [];

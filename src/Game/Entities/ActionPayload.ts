@@ -1,7 +1,7 @@
 import { ActionsPayloadType } from '../Enums/ActionsPayloadType';
 import { Card } from './Card';
-import { IPlayer } from './Player';
 import { Game } from '../Games';
+import { User } from '../../Services/Auth/Entities/User';
 
 export type ActionPayload =
   | ActionPayloadDraw
@@ -17,12 +17,12 @@ export type ActionPayload =
 
 export type ActionPayloadStart = {
   action: ActionsPayloadType.Start;
-  players: IPlayer[];
+  players: User[];
 };
 
 export type ActionPayloadCurrentPlayer = {
   action: ActionsPayloadType.CurrentPlayer;
-  player: IPlayer;
+  player: User;
 };
 
 export type ActionPayloadDraw = {
@@ -48,7 +48,7 @@ export type ActionPayloadPlay = {
 
 export type ActionPayloadNewPlayer = {
   action: ActionsPayloadType.NewPlayer;
-  player: IPlayer;
+  player: User;
 };
 
 export type ActionPayloadStack = {
@@ -59,10 +59,10 @@ export type ActionPayloadStack = {
 export type ActionPayloadAssignDealer = {
   action: ActionsPayloadType.AssignDealer;
   game: Game;
-  players: IPlayer[];
+  players: User[];
 };
 
 export type ActionPayloadWin = {
   action: ActionsPayloadType.Win;
-  winner: IPlayer;
+  winner: User;
 };

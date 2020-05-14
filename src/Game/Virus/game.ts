@@ -1,7 +1,7 @@
 import { ReplaySubject } from 'rxjs';
 import { scan, filter, tap, take } from 'rxjs/operators';
 
-import { IPlayer, Player } from '../Entities/Player';
+import { Player } from '../Entities/Player';
 import { createSubject } from '../../Utils/createSubject';
 import { Action } from '../Entities/Action';
 import { EntitiesId } from '../Enums/EntitiesId';
@@ -13,18 +13,19 @@ import { Board } from '../Entities/Board';
 import { domain } from '../../Services/domain';
 import { Game } from '../Games';
 import { checkWin } from './win';
+import { User } from '../../Services/Auth/Entities/User';
 
 export type VirusGame = ReturnType<typeof virusGenerator>;
 
 export function virusGenerator(numberOfPlayers = 2) {
-  let players: IPlayer[] = [];
-  let currentPlayer: IPlayer = null;
+  let players: User[] = [];
+  let currentPlayer: User = null;
   let board: Board = new Map();
 
   const game = Game.Virus;
   const id = EntitiesId.Game;
   const [boardSubject, board$] = createSubject<Board>(() => new ReplaySubject(1));
-  const [playerSubject, player$] = createSubject<IPlayer>();
+  const [playerSubject, player$] = createSubject<User>();
   const [startSubject, start$] = createSubject<typeof gameActions$>();
   const [gameActions$, fireAction] = domain().adapter('createActionable').execute(id);
 

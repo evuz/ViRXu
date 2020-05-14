@@ -10,11 +10,11 @@ import { Requirement, RequirementApply } from '../../Game/Entities/Requirements'
 import { getSelections } from '../../Utils/getSelections';
 import { Board as IBoard } from '../../Game/Entities/Board';
 import { PlayerContext } from '../context/Player/PlayerContext';
-import { IPlayer } from '../../Game/Entities/Player';
 import { domain } from '../../Services/domain';
 import { filter } from 'rxjs/operators';
 import { ActionsPayloadType } from '../../Game/Enums/ActionsPayloadType';
 import { ActionPayloadNewPlayer } from '../../Game/Entities/ActionPayload';
+import { User } from '../../Services/Auth/Entities/User';
 
 type BoardProps = {};
 
@@ -26,7 +26,7 @@ export const Board: FC<BoardProps> = () => {
 
   const [cardsSelected, setCardsSelected] = useState<Map<Card, boolean>>(new Map());
   const [board, setBoard] = useState<IBoard>(new Map());
-  const [players, setPlayers] = useState<IPlayer[]>([]);
+  const [players, setPlayers] = useState<User[]>([]);
 
   const boardSelectable = selectionRequirements.place === SelectionPlace.Board;
 
