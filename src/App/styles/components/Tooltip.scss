@@ -1,0 +1,44 @@
+$bg-color: rgba(17, 17, 17, 0.8) !default;
+
+[data-tooltip] {
+  position: relative;
+  &:after {
+    font-family: 'Lato', sans-serif;
+    position: absolute;
+    font-size: $font-size-xs;
+    border-radius: $border-radius;
+    content: attr(data-tooltip);
+    padding: $spacing-s;
+    background-color: rgba(get-color(black), 0.8);
+    box-shadow: $shadow;
+    color: get-color(white);
+    text-align: center;
+    z-index: 1;
+    pointer-events: none;
+    display: block;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    bottom: 100%;
+    left: 50%;
+    transform: translate(-50%, $spacing-s);
+    white-space: pre;
+    width: auto;
+  }
+  &:after {
+    opacity: 0;
+  }
+  &:hover {
+    overflow: visible;
+    &:after {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -$spacing-s);
+    }
+  }
+}
+
+[data-tooltip='']:after {
+  visibility: hidden !important;
+}
