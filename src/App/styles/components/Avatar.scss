@@ -1,0 +1,9 @@
+.Avatar {
+  &__img {
+    height: 4 * $font-size;
+    width: 4 * $font-size;
+    border-radius: 5 * $font-size;
+    overflow: hidden;
+    box-shadow: $shadow;
+  }
+}
