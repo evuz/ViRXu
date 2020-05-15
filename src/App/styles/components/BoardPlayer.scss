@@ -1,15 +1,47 @@
 .BoardPlayer {
   flex: 1;
+  padding: $spacing;
   border-radius: $border-radius;
+  background-color: rgba(get-color(black), .8);
 
-  &--active {
-    background-color: rgba(get-color(accent), .5);
+  &--active  {
+    box-shadow: $shadow-l;
+  }
+
+  &--active &__name {
+    display: none;
+  }
+
+  &__header {
+    font-size: $font-size-m;
+    color: get-color(white);
+    padding-bottom: $spacing;
+    display: flex;
+    align-items: center;
+
+    & > * {
+      &:not(:last-child) {
+        margin-right: $spacing;
+      }
+    }
   }
 
   &__cards {
     display: flex;
+    height: $font-size * 10;
+
+    & > * {
+      &:not(:last-child) {
+        margin-right: -3 * $spacing;
+      }
+    }
+  }
+
+  &--active &__header {
+    transform: scale(1.1);
     justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+    & > * {
+      margin: 0 auto;
+    }
   }
 }

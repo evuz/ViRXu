@@ -1,8 +1,10 @@
 .Board {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  gap: $spacing;
+  max-width: 1000px;
+  margin: 0 auto;
+
   @media (orientation: landscape) {
-    flex-direction: row;
+    grid-template-columns: 50% 50%;
   }
 }
