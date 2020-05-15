@@ -43,9 +43,11 @@ export const OrganCard: FC<CardPlayedProps> = ({ card: cardPlayed, selectable = 
       <Card onSize={setDimensions} selectable={selectable} card={organ}>
         <div className={`OrganCard__states OrganCard__states--${stateSize}`}>
           {cardPlayed.state === OrganCardState.Immnunise ? (
-            <i className={`icon icon-immunise`}></i>
+            <i data-tooltip={cardPlayed.state} className={`icon icon-immunise`}></i>
           ) : (
-            cardPlayed.cards?.map((card, index) => <i key={index} className={`icon icon-${card.type}`}></i>)
+            cardPlayed.cards?.map((card, index) => (
+              <i key={index} data-tooltip={card.name} className={`icon icon-${card.type}`}></i>
+            ))
           )}
         </div>
       </Card>
